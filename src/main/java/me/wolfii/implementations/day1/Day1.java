@@ -1,6 +1,6 @@
 package me.wolfii.implementations.day1;
 
-import me.wolfii.Solution;
+import me.wolfii.solving.Solution;
 
 import java.util.List;
 

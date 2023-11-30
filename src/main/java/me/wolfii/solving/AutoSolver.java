@@ -1,8 +1,6 @@
-package me.wolfii.implementations;
+package me.wolfii.solving;
 
 import me.wolfii.Main;
-import me.wolfii.Solution;
-import me.wolfii.AutoSolve;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,6 +12,10 @@ import static me.wolfii.Main.LOGGER;
 public class AutoSolver {
     private static String packagePath = "me.wolfii.implementations";
     private static String inputsPath = "inputs";
+
+    public static void solve(int day) {
+        AutoSolver.solve(day, AutoSolve.BOTH);
+    }
 
     public static void solve(int day, AutoSolve autoSolve) {
         List<String> lines;

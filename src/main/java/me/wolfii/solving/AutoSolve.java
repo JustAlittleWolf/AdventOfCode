@@ -1,4 +1,4 @@
-package me.wolfii;
+package me.wolfii.solving;
 
 public enum AutoSolve {
     FIRST,
