@@ -7,18 +7,15 @@ import java.util.List;
 
 public class Day1 implements Solution {
     public void solveFirst(List<String> lines) {
-        ArrayList<String> values = new ArrayList<>();
-        for (String line : lines) {
-            values.add(this.getLineValue(line));
-        }
         int sum = 0;
-        lines.get(100);
-        for (String value : values) sum += Integer.parseInt(value);
+        for (String line : lines) {
+            sum += this.getLineValue(line);
+        }
         System.out.println("Part 1: " + sum);
     }
 
     public void solveSecond(List<String> lines) {
-        ArrayList<String> values = new ArrayList<>();
+        int sum = 0;
         for (String line : lines) {
             line = line.replace("one", "one1one")
                     .replace("two", "two2two")
@@ -30,14 +27,12 @@ public class Day1 implements Solution {
                     .replace("eight", "eight8eight")
                     .replace("nine", "nine9nine");
 
-            values.add(this.getLineValue(line));
+            sum += this.getLineValue(line);
         }
-        int sum = 0;
-        for (String value : values) sum += Integer.parseInt(value);
         System.out.println("Part 2: " + sum);
     }
 
-    private String getLineValue(String line) {
+    private int getLineValue(String line) {
         char firstNum = '0';
         char secondNum = '0';
         boolean foundFirst = false;
@@ -50,6 +45,6 @@ public class Day1 implements Solution {
             firstNum = secondNum = character;
             foundFirst = true;
         }
-        return String.valueOf(firstNum) + secondNum;
+        return Character.getNumericValue(firstNum) * 10 + Character.getNumericValue(secondNum);
     }
 }
