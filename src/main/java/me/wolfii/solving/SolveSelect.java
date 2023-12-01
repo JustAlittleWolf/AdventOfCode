@@ -1,6 +1,6 @@
 package me.wolfii.solving;
 
-public enum AutoSolve {
+public enum SolveSelect {
     FIRST,
     SECOND,
     BOTH

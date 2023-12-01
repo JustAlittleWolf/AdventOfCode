@@ -1,14 +1,12 @@
 package me.wolfii;
 
-import me.wolfii.solving.AutoSolve;
+import me.wolfii.solving.SolveSelect;
 import me.wolfii.solving.AutoSolver;
-
-import java.util.logging.Logger;
+import me.wolfii.solving.SolveEnvironment;
 
 public class Main {
-    public static Logger LOGGER = Logger.getLogger("adventOfCodeSolver");
 
     public static void main(String[] args) {
-        AutoSolver.solve(1, AutoSolve.BOTH);
+        AutoSolver.solve(1, SolveSelect.BOTH, SolveEnvironment.TEST_THEN_PROD);
     }
 }
