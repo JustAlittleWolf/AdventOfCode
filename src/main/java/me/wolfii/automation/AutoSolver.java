@@ -1,6 +1,4 @@
-package me.wolfii.solving;
-
-import me.wolfii.Main;
+package me.wolfii.automation;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -81,9 +79,7 @@ public class AutoSolver {
     private static List<String> getInput(int day, boolean test) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
         String fileName = AutoSolver.inputsPath + File.separator + "day" + day + (test ? ".test" : "") + ".txt";
-        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(fileName);
-        assert inputStream != null;
-
+        InputStream inputStream = new FileInputStream(fileName);
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 

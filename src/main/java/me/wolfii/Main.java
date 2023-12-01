@@ -1,8 +1,8 @@
 package me.wolfii;
 
-import me.wolfii.solving.SolveSelect;
-import me.wolfii.solving.AutoSolver;
-import me.wolfii.solving.SolveEnvironment;
+import me.wolfii.automation.SolveSelect;
+import me.wolfii.automation.AutoSolver;
+import me.wolfii.automation.SolveEnvironment;
 
 public class Main {
 

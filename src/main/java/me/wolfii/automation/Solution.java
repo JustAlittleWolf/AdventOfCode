@@ -1,4 +1,4 @@
-package me.wolfii.solving;
+package me.wolfii.automation;
 
 import java.util.List;
 
