@@ -2,7 +2,6 @@ package me.wolfii.implementations.day1;
 
 import me.wolfii.solving.Solution;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Day1 implements Solution {

@@ -4,10 +4,7 @@ import me.wolfii.Main;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class AutoSolver {
