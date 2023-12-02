@@ -13,25 +13,20 @@ public class Day2 implements Solution {
                 sum += i + 1;
             }
         }
-
-
         System.out.println("Part 1: " + sum);
     }
 
     public void solveSecond(List<String> lines) {
         int sum = 0;
-
         for (String line : lines) {
             CubeSet cubes = this.getCubesOfLine(line);
             sum += (cubes.red * cubes.blue * cubes.green);
         }
-
         System.out.println("Part 2: " + sum);
     }
 
     private CubeSet getCubesOfLine(String line) {
         CubeSet cubes = new CubeSet(0, 0, 0);
-
         String dataPart = line.split(":")[1];
         for (String match : dataPart.split(";")) {
             for (String cube : match.split(",")) {
@@ -40,21 +35,20 @@ public class Day2 implements Solution {
                     cubes.red = Math.max(Integer.parseInt(cube.split(" ")[0]), cubes.red);
                 }
                 if (cube.endsWith("blue")) {
-                    cubes.blue = Math.max(cubes.blue, Integer.parseInt(cube.split(" ")[0]));
+                    cubes.blue = Math.max(Integer.parseInt(cube.split(" ")[0]), cubes.blue);
                 }
                 if (cube.endsWith("green")) {
                     cubes.green = Math.max(Integer.parseInt(cube.split(" ")[0]), cubes.green);
                 }
             }
         }
-
         return cubes;
     }
 
     private static class CubeSet {
-        int red = 0;
-        int green = 0;
-        int blue = 0;
+        int red;
+        int green;
+        int blue;
 
         public CubeSet(int red, int green, int blue) {
             this.red = red;
