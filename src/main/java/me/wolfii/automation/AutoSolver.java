@@ -126,7 +126,7 @@ public class AutoSolver {
         HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (httpResponse.statusCode() == 404)
-            throw new ConnectionException("Day " + day + " does not exists or is not yet accessible");
+            throw new ConnectionException("Day " + day + " does not exist or is not yet accessible");
         if (httpResponse.statusCode() == 400 || httpResponse.statusCode() == 500)
             throw new ConnectionException("Invalid session token");
         if (httpResponse.statusCode() != 200)
