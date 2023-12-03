@@ -49,7 +49,7 @@ public class Day3 implements Solution {
                 hasValue = false;
                 curValue = 0;
             }
-            if (hasValue) values.add(new Value(curValue, startX, line.length(), y));
+            if (hasValue) values.add(new Value(curValue, startX, line.length() - 1, y));
         }
         return values;
     }
@@ -60,6 +60,7 @@ public class Day3 implements Solution {
             String line = lines.get(y);
             for (int x = 0; x < line.length(); x++) {
                 char character = line.charAt(x);
+                if(Character.isDigit(character)) continue;
                 if (!gearsOnly && character != '.') {
                     symbols.add(new Symbol(x, y));
                 }
