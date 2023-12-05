@@ -9,7 +9,8 @@ public class Main {
 
     public static void main(String[] args) {
         AutoSolver.setSessionToken(EnvReader.get("ADVENT_OF_CODE_SESSION_TOKEN"));
+        //AutoSolver.enableBenchmark();
 
-        AutoSolver.solve(5, SolveSelect.BOTH, SolveEnvironment.TEST_THEN_PROD);
+        AutoSolver.solveToday(SolveEnvironment.TEST_THEN_PROD);
     }
 }

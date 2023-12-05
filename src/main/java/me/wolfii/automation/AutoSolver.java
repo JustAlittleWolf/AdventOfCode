@@ -6,16 +6,37 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.FileAlreadyExistsException;
+import java.text.DecimalFormat;
 import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class AutoSolver {
     private static String packagePath = "me.wolfii.implementations";
     private static String inputsPath = "inputs";
     private static String sessionToken = null;
+    private static int offsetMinutes = 15;
+    private static boolean benchmark = false;
+
+    public static void solveToday() {
+        AutoSolver.solveToday(SolveSelect.BOTH, SolveEnvironment.PROD);
+    }
+
+    public static void solveToday(SolveSelect solveSelect) {
+        AutoSolver.solveToday(solveSelect, SolveEnvironment.PROD);
+    }
+
+    public static void solveToday(SolveEnvironment solveEnvironment) {
+        AutoSolver.solveToday(SolveSelect.BOTH, solveEnvironment);
+    }
+
+    public static void solveToday(SolveSelect solveSelect, SolveEnvironment solveEnvironment) {
+        OffsetDateTime correctedDateTime = OffsetDateTime.now(ZoneId.of("UTC-5")).plusMinutes(offsetMinutes);
+        AutoSolver.solve(correctedDateTime.getDayOfMonth(), solveSelect, solveEnvironment);
+    }
 
     public static void solve(int day) {
         AutoSolver.solve(day, SolveSelect.BOTH, SolveEnvironment.PROD);
@@ -77,14 +98,20 @@ public class AutoSolver {
 
     private static void trySolve(Solution solution, List<String> lines, SolveSelect solveSelect, int day) {
         try {
+            long startTime = System.nanoTime();
             if (solveSelect != SolveSelect.SECOND) solution.solveFirst(lines);
+            if (benchmark)
+                System.out.println(" took " + ((System.nanoTime() - startTime) / 10_000 / 100d) + "ms");
         } catch (Exception e) {
             System.err.println("Exception while running solution for part 1 of day " + day);
             e.printStackTrace();
         }
 
         try {
+            long startTime = System.nanoTime();
             if (solveSelect != SolveSelect.FIRST) solution.solveSecond(lines);
+            if (benchmark)
+                System.out.println(" took " + ((System.nanoTime() - startTime) / 10_000 / 100d) + "ms");
         } catch (Exception e) {
             System.err.println("Exception while running solution for part 2 of day " + day);
             e.printStackTrace();
@@ -118,7 +145,7 @@ public class AutoSolver {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .header("Cookie", "session=" + AutoSolver.sessionToken)
-                .uri(new URI("https://adventofcode.com/2023/day/"+day+"/input"))
+                .uri(new URI("https://adventofcode.com/2023/day/" + day + "/input"))
                 .GET()
                 .timeout(Duration.of(3, ChronoUnit.SECONDS))
                 .build();
@@ -158,5 +185,17 @@ public class AutoSolver {
 
     public static void setSessionToken(String sessionToken) {
         AutoSolver.sessionToken = sessionToken;
+    }
+
+    public static void setOffsetMinutes(int minutes) {
+        AutoSolver.offsetMinutes = minutes;
+    }
+
+    public static void enableBenchmark() {
+        benchmark = true;
+    }
+
+    public static void disableBenchmark() {
+        benchmark = false;
     }
 }
