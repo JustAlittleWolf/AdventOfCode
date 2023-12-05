@@ -4,6 +4,10 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### Inputs ###
+inputs/*.txt
+!inputs/*.test.txt
+
 ### IntelliJ IDEA ###
 .idea/
 *.iml
