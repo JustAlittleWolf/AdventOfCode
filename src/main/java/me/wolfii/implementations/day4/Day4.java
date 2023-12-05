@@ -11,9 +11,7 @@ public class Day4 implements Solution {
     public void solveFirst(List<String> lines) {
         int sum = 0;
         for (String line : lines) {
-            String data = line.split(":")[1].trim();
-
-            int matches = this.getNumMatches(data);
+            int matches = this.getNumMatches(line);
             sum += (int) Math.pow(2, matches - 1);
         }
         System.out.println("Part 1: " + sum);
@@ -23,8 +21,7 @@ public class Day4 implements Solution {
         int[] collectibleCards = new int[lines.size()];
         for(int i = lines.size() - 1; i >= 0; i--) {
             int totalCards = 1;
-            String data = lines.get(i).split(":")[1].trim();
-            int matches = this.getNumMatches(data);
+            int matches = this.getNumMatches(lines.get(i));
             for(int card = i + 1; card < i + matches + 1 && card < lines.size(); card++) {
                 totalCards += collectibleCards[card];
             }
@@ -36,7 +33,8 @@ public class Day4 implements Solution {
         System.out.println("Part 2: " + sum);
     }
 
-    private int getNumMatches(String data) {
+    private int getNumMatches(String line) {
+        String data = line.split(":")[1].trim();
         int matches = 0;
         String[] winningNums = data.split("\\|")[0].trim().split(" ");
         String myNums = " " + data.split("\\|")[1] + " ";
