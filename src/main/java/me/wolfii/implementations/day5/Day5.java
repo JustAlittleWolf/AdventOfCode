@@ -28,14 +28,12 @@ public class Day5 implements Solution {
         }
 
         long bestSeed = Long.MAX_VALUE;
-        for (Range seedRange : seedRanges) {
-            List<Range> seedDestinations = List.of(seedRange);
-            for (SourceMap sourceMap : sourceMaps) {
-                seedDestinations = sourceMap.getDestinationRanges(seedDestinations);
-            }
-            for (Range range : seedDestinations) {
-                bestSeed = Math.min(range.start(), bestSeed);
-            }
+        List<Range> seedDestinations = seedRanges;
+        for (SourceMap sourceMap : sourceMaps) {
+            seedDestinations = sourceMap.getDestinationRanges(seedDestinations);
+        }
+        for (Range range : seedDestinations) {
+            bestSeed = Math.min(range.start(), bestSeed);
         }
 
         System.out.println("Part 2: " + bestSeed);
