@@ -6,7 +6,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.FileAlreadyExistsException;
-import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
