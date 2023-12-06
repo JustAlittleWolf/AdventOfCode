@@ -100,7 +100,7 @@ public class AutoSolver {
             long startTime = System.nanoTime();
             if (solveSelect != SolveSelect.SECOND) solution.solveFirst(lines);
             if (benchmark)
-                System.out.println(" took " + ((System.nanoTime() - startTime) / 10_000 / 100d) + "ms");
+                System.out.println(" took " + getBenchmarkFormatted(startTime));
         } catch (Exception e) {
             System.err.println("Exception while running solution for part 1 of day " + day);
             e.printStackTrace();
@@ -110,11 +110,19 @@ public class AutoSolver {
             long startTime = System.nanoTime();
             if (solveSelect != SolveSelect.FIRST) solution.solveSecond(lines);
             if (benchmark)
-                System.out.println(" took " + ((System.nanoTime() - startTime) / 10_000 / 100d) + "ms");
+                System.out.println(" took " + getBenchmarkFormatted(startTime));
         } catch (Exception e) {
             System.err.println("Exception while running solution for part 2 of day " + day);
             e.printStackTrace();
         }
+    }
+
+    private static String getBenchmarkFormatted(long startTimeNanos) {
+        long nanoSeconds = System.nanoTime() - startTimeNanos;
+        if(nanoSeconds > 1_000_000_000) return (nanoSeconds / 10_000_000) / 100d + "s";
+        if(nanoSeconds > 1_000_000) return (nanoSeconds / 10_000) / 100d + "ms";
+        if(nanoSeconds > 1_000) return (nanoSeconds / 10) / 100d + "μs";
+        return nanoSeconds + "ns";
     }
 
     private static List<String> getInput(int day, boolean test) throws IOException {
