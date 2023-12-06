@@ -14,12 +14,11 @@ public class Day6 implements Solution {
         for (int race = 0; race < times.size(); race++) {
             long raceDuration = times.get(race);
             long winningDistance = distances.get(race);
-            int numWins = 0;
-            for (int i = 1; i < raceDuration; i++) {
-                long distance = getDistance(i, raceDuration);
-                if (distance > winningDistance) numWins++;
-            }
-            sum *= numWins;
+
+            double discriminant = Math.sqrt(raceDuration * raceDuration / 4d - winningDistance);
+            long lowerBound = (long) Math.ceil(raceDuration / 2d - discriminant);
+            long upperBound = (long) (raceDuration / 2d + discriminant);
+            sum *= (upperBound + 1) - lowerBound;
         }
         System.out.println("Part 1: " + sum);
     }
@@ -28,10 +27,10 @@ public class Day6 implements Solution {
         long raceDuration = getValues(lines.get(0).replace(" ", "")).get(0);
         long winningDistance = getValues(lines.get(1).replace(" ", "")).get(0);
 
-        long lowerBound = findBoundBinarySearch(raceDuration, winningDistance, Bound.LOWER);
-        long upperBound = findBoundBinarySearch(raceDuration, winningDistance, Bound.UPPER);
-        long numWins = (upperBound + 1) - lowerBound;
-        System.out.println("Part 2: " + numWins);
+        double discriminant = Math.sqrt(raceDuration * raceDuration / 4d - winningDistance);
+        long lowerBound = (long) Math.ceil(raceDuration / 2d - discriminant);
+        long upperBound = (long) (raceDuration / 2d + discriminant);
+        System.out.println("Part 2: " + ((upperBound + 1) - lowerBound));
     }
 
     private List<Long> getValues(String line) {
@@ -42,30 +41,5 @@ public class Day6 implements Solution {
             values.add(Long.parseLong(value));
         }
         return values;
-    }
-
-    private long findBoundBinarySearch(long raceDuration, long winningDistance, Bound bound) {
-        long stepSize = raceDuration / 2;
-        long median = raceDuration / 2;
-
-        while (stepSize > 0) {
-            boolean currentWin = getDistance(median, raceDuration) > winningDistance;
-            if (currentWin) {
-                boolean neighbourWin = getDistance(median + bound.signum, raceDuration) > winningDistance;
-                if(!neighbourWin) return median;
-            }
-            stepSize /= 2;
-            if (currentWin) {
-                median += bound.signum * stepSize;
-            } else {
-                median -= bound.signum * stepSize;
-            }
-        }
-        System.out.println("ERR");
-        return 0;
-    }
-
-    private long getDistance(long heldTime, long raceDuration) {
-        return heldTime * (raceDuration - heldTime);
     }
 }
