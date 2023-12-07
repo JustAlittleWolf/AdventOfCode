@@ -7,35 +7,31 @@ import java.util.List;
 
 public class Day7 implements Solution {
     public void solveFirst(List<String> lines) {
-        List<Deck> decks = getDecks(lines);
-        Deck.withJokers = false;
-        int winnings = getWinnings(decks);
-        System.out.println("Part 1: " + winnings);
+        List<Hand> hands = getHands(lines, false);
+        System.out.println("Part 1: " + getWinnings(hands));
     }
 
     public void solveSecond(List<String> lines) {
-        List<Deck> decks = getDecks(lines);
-        Deck.withJokers = true;
-        int winnings = getWinnings(decks);
-        System.out.println("Part 2: " + winnings);
+        List<Hand> hands = getHands(lines, true);
+        System.out.println("Part 2: " + getWinnings(hands));
     }
 
-    private List<Deck> getDecks(List<String> lines) {
-        List<Deck> decks = new ArrayList<>();
+    private List<Hand> getHands(List<String> lines, boolean withJokers) {
+        List<Hand> hands = new ArrayList<>();
         for (String line : lines) {
             String unparsedCards = line.split(" ")[0];
             int bidAmount = Integer.parseInt(line.split(" ")[1]);
-            decks.add(new Deck(unparsedCards.toCharArray(), bidAmount));
+            hands.add(new Hand(unparsedCards.toCharArray(), bidAmount, withJokers));
         }
-        return decks;
+        return hands;
     }
 
-    private int getWinnings(List<Deck> decks) {
-        decks.sort(Deck::compareTo);
+    private int getWinnings(List<Hand> hands) {
+        hands.sort(Hand::compareTo);
         int winnings = 0;
-        for (int i = 0; i < decks.size(); i++) {
-            Deck deck = decks.get(i);
-            winnings += deck.getBidAmount() * (i + 1);
+        for (int i = 0; i < hands.size(); i++) {
+            Hand hand = hands.get(i);
+            winnings += hand.bidAmount * (i + 1);
         }
         return winnings;
     }
