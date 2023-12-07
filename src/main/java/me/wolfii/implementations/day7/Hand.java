@@ -18,7 +18,7 @@ public class Hand {
     }
 
     public int compareTo(Hand other) {
-        if (handType.points != other.handType.points) {
+        if (handType != other.handType) {
             return handType.points - other.handType.points;
         }
 

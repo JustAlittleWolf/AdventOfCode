@@ -30,8 +30,7 @@ public class Day7 implements Solution {
         hands.sort(Hand::compareTo);
         int winnings = 0;
         for (int i = 0; i < hands.size(); i++) {
-            Hand hand = hands.get(i);
-            winnings += hand.bidAmount * (i + 1);
+            winnings += hands.get(i).bidAmount * (i + 1);
         }
         return winnings;
     }
