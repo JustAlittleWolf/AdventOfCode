@@ -100,8 +100,8 @@ public class Day10 implements Solution {
             direction = currentPipe.getExit(direction.inverted());
         }
 
-        rightwardsTiles.removeIf(loop::contains);
-        leftwardsTiles.removeIf(loop::contains);
+        loop.forEach(rightwardsTiles::remove);
+        loop.forEach(leftwardsTiles::remove);
 
         rightwardsTiles = propagate(rightwardsTiles, loop, width, height);
         leftwardsTiles = propagate(leftwardsTiles, loop, width, height);
@@ -113,10 +113,10 @@ public class Day10 implements Solution {
         Set<Vec2> propagatedTiles = new HashSet<>(tiles);
         Set<Vec2> checked = new HashSet<>(tiles);
         checked.addAll(loop);
-        Queue<Vec2> toCheck = new LinkedList<>(tiles);
+        Deque<Vec2> toCheck = new ArrayDeque<>(tiles);
 
         while (!toCheck.isEmpty()) {
-            Vec2 element = toCheck.poll();
+            Vec2 element = toCheck.pollLast();
             checked.add(element);
             for (Vec2 neighbour : element.neighbours()) {
                 if (neighbour.x() < 0 || neighbour.x() > width) return Set.of();
