@@ -3,6 +3,7 @@ package me.wolfii.implementations.common;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public record Vec2(int x, int y) {
     public static List<Vec2> NEIGHBOURS_NEXTTO = List.of(new Vec2(0, 1), new Vec2(0, -1), new Vec2(1, 0), new Vec2(-1, 0));
     public static List<Vec2> NEIGHBOURS_DIAGONAL = List.of(
