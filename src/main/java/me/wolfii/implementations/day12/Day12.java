@@ -27,20 +27,24 @@ public class Day12 implements Solution {
 
     private long getVariationSums(List<String> lines) {
         long sum = 0;
+        HashMap<VariationState, Long> cache = new HashMap<>();
         for (String line : lines) {
             String[] parts = line.split(" ");
             List<Integer> wordLengths = new ArrayList<>();
             for (String length : parts[1].split(",")) {
                 wordLengths.add(Integer.parseInt(length));
             }
-            sum += getVariations(parts[0], wordLengths, 0, new HashMap<>());
+            sum += getVariations(parts[0], wordLengths, 0, cache);
+            cache.clear();
         }
         return sum;
     }
 
     private long getVariations(String characters, List<Integer> wordLengths, int currentWord, HashMap<VariationState, Long> cache) {
         if (characters.isEmpty()) {
-            return ((wordLengths.isEmpty() && currentWord == 0) || (wordLengths.size() == 1 && wordLengths.get(0) == currentWord)) ? 1 : 0;
+            if (wordLengths.isEmpty() && currentWord == 0) return 1;
+            if (wordLengths.size() == 1 && wordLengths.get(0) == currentWord) return 1;
+            return 0;
         }
 
         VariationState variationState = new VariationState(characters, wordLengths, currentWord);
@@ -48,46 +52,19 @@ public class Day12 implements Solution {
 
         SpringStatus springStatus = SpringStatus.of(characters.charAt(0));
         long count = 0;
-
-        if (springStatus.couldBeBroken()) {
+        if (springStatus.broken()) {
             if (!wordLengths.isEmpty() && wordLengths.get(0) == currentWord) {
-                List<Integer> newWordLengths = new ArrayList<>(wordLengths);
-                newWordLengths = newWordLengths.subList(1, newWordLengths.size());
-                count += getVariations(characters.substring(1), newWordLengths, 0, cache);
+                List<Integer> nextWordLengths = new ArrayList<>(wordLengths).subList(1, wordLengths.size());
+                count += getVariations(characters.substring(1), nextWordLengths, 0, cache);
             } else if (currentWord == 0) {
                 count += getVariations(characters.substring(1), wordLengths, 0, cache);
             }
         }
-        if (springStatus.couldBeWorking()) {
+        if (springStatus.working()) {
             count += getVariations(characters.substring(1), wordLengths, currentWord + 1, cache);
         }
 
         cache.put(variationState, count);
         return count;
-    }
-
-    private record VariationState(String characters, List<Integer> wordLengths, int currentWord) {}
-
-    private enum SpringStatus {
-        WORKING,
-        UNKNOWN,
-        BROKEN;
-
-        public boolean couldBeBroken() {
-            return this == UNKNOWN || this == BROKEN;
-        }
-
-        public boolean couldBeWorking() {
-            return this == UNKNOWN || this == WORKING;
-        }
-
-        public static SpringStatus of(char character) {
-            return switch (character) {
-                case '#' -> WORKING;
-                case '.' -> BROKEN;
-                case '?' -> UNKNOWN;
-                default -> null;
-            };
-        }
     }
 }
