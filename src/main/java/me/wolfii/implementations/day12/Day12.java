@@ -49,18 +49,17 @@ public class Day12 implements Solution {
 
         VariationState variationState = new VariationState(characters, wordLengths, currentWord);
         if (cache.containsKey(variationState)) return cache.get(variationState);
-
-        SpringStatus springStatus = SpringStatus.of(characters.charAt(0));
+        
+        char spring = characters.charAt(0);
         long count = 0;
-        if (springStatus.broken()) {
+        if (spring == '?' || spring == '.') {
             if (!wordLengths.isEmpty() && wordLengths.get(0) == currentWord) {
-                List<Integer> nextWordLengths = new ArrayList<>(wordLengths).subList(1, wordLengths.size());
-                count += getVariations(characters.substring(1), nextWordLengths, 0, cache);
+                count += getVariations(characters.substring(1), wordLengths.subList(1, wordLengths.size()), 0, cache);
             } else if (currentWord == 0) {
                 count += getVariations(characters.substring(1), wordLengths, 0, cache);
             }
         }
-        if (springStatus.working()) {
+        if (spring == '?' || spring == '#') {
             count += getVariations(characters.substring(1), wordLengths, currentWord + 1, cache);
         }
 
