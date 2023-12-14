@@ -5,6 +5,7 @@ import me.wolfii.automation.Solution;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Day12 implements Solution {
     public void solveFirst(List<String> lines) {
@@ -27,7 +28,7 @@ public class Day12 implements Solution {
 
     private long getVariationSums(List<String> lines) {
         long sum = 0;
-        HashMap<VariationState, Long> cache = new HashMap<>();
+        Map<Integer, Long> cache = new HashMap<>();
         for (String line : lines) {
             String[] parts = line.split(" ");
             List<Integer> wordLengths = new ArrayList<>();
@@ -40,16 +41,16 @@ public class Day12 implements Solution {
         return sum;
     }
 
-    private long getVariations(String characters, List<Integer> wordLengths, int currentWord, HashMap<VariationState, Long> cache) {
+    private long getVariations(String characters, List<Integer> wordLengths, int currentWord, Map<Integer, Long> cache) {
         if (characters.isEmpty()) {
             if (wordLengths.isEmpty() && currentWord == 0) return 1;
             if (wordLengths.size() == 1 && wordLengths.get(0) == currentWord) return 1;
             return 0;
         }
 
-        VariationState variationState = new VariationState(characters, wordLengths, currentWord);
-        if (cache.containsKey(variationState)) return cache.get(variationState);
-        
+        int key = (characters.length() << 18) + (wordLengths.size() << 8) + currentWord;
+        if (cache.containsKey(key)) return cache.get(key);
+
         char spring = characters.charAt(0);
         long count = 0;
         if (spring == '?' || spring == '.') {
@@ -63,7 +64,7 @@ public class Day12 implements Solution {
             count += getVariations(characters.substring(1), wordLengths, currentWord + 1, cache);
         }
 
-        cache.put(variationState, count);
+        cache.put(key, count);
         return count;
     }
 }
