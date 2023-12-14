@@ -48,7 +48,7 @@ public class Day12 implements Solution {
             return 0;
         }
 
-        int key = (characters.length() << 18) + (wordLengths.size() << 8) + currentWord;
+        int key = (characters.length() << 20) + (wordLengths.size() << 10) + currentWord;
         if (cache.containsKey(key)) return cache.get(key);
 
         char spring = characters.charAt(0);
