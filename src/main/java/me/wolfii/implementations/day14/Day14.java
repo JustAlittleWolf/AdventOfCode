@@ -43,6 +43,7 @@ public class Day14 implements Solution {
         for (int y = 0; y < lines.size(); y++) {
             for (int x = 0; x < lines.get(y).length(); x++) {
                 Vec2 pos = new Vec2(x, y);
+                if(lines.get(y).charAt(x) == '.') continue;
                 locations.put(pos, lines.get(y).charAt(x));
             }
         }
@@ -79,8 +80,9 @@ public class Day14 implements Solution {
             int mirrorCount = 0;
             for (int b = size - 1; b >= 0; b--) {
                 Vec2 pos = south ? new Vec2(a, b) : new Vec2(b, a);
-                tilted.put(pos, locations.get(pos));
-                if (locations.get(pos) == '#') {
+                char character = locations.getOrDefault(pos, '.');
+                if (character == '#') {
+                    tilted.put(pos, '#');
                     for (int mirrorPos = outwardRock - 1; mirrorPos >= outwardRock - mirrorCount; mirrorPos--) {
                         Vec2 putPos = south ? new Vec2(a, mirrorPos) : new Vec2(mirrorPos, a);
                         tilted.put(putPos, 'O');
@@ -88,10 +90,7 @@ public class Day14 implements Solution {
                     mirrorCount = 0;
                     outwardRock = b;
                 }
-                if (locations.get(pos) == 'O') {
-                    tilted.put(pos, '.');
-                    mirrorCount++;
-                }
+                if (character == 'O') mirrorCount++;
             }
             for (int mirrorPos = outwardRock - 1; mirrorPos >= outwardRock - mirrorCount; mirrorPos--) {
                 Vec2 putPos = south ? new Vec2(a, mirrorPos) : new Vec2(mirrorPos, a);
@@ -108,8 +107,9 @@ public class Day14 implements Solution {
             int mirrorCount = 0;
             for (int b = 0; b < size; b++) {
                 Vec2 pos = north ? new Vec2(a, b) : new Vec2(b, a);
-                tilted.put(pos, locations.get(pos));
-                if (locations.get(pos) == '#') {
+                char character = locations.getOrDefault(pos, '.');
+                if (character == '#') {
+                    tilted.put(pos, '#');
                     for (int mirrorPos = inwardRock + 1; mirrorPos <= inwardRock + mirrorCount; mirrorPos++) {
                         Vec2 putPos = north ? new Vec2(a, mirrorPos) : new Vec2(mirrorPos, a);
                         tilted.put(putPos, 'O');
@@ -117,10 +117,7 @@ public class Day14 implements Solution {
                     mirrorCount = 0;
                     inwardRock = b;
                 }
-                if (locations.get(pos) == 'O') {
-                    tilted.put(pos, '.');
-                    mirrorCount++;
-                }
+                if (character == 'O') mirrorCount++;
             }
             for (int mirrorPos = inwardRock + 1; mirrorPos <= inwardRock + mirrorCount; mirrorPos++) {
                 Vec2 putPos = north ? new Vec2(a, mirrorPos) : new Vec2(mirrorPos, a);
@@ -134,7 +131,8 @@ public class Day14 implements Solution {
         int sum = 0;
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                if (locations.get(new Vec2(x, y)) != 'O') continue;
+                Vec2 pos = new Vec2(x, y);
+                if (locations.getOrDefault(pos, '.') != 'O') continue;
                 sum += size - y;
             }
         }
