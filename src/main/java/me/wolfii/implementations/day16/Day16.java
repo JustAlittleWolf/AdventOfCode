@@ -50,7 +50,7 @@ public class Day16 implements Solution {
     }
 
     private int getCoveredTiles(DirectionalTile start, char[][] mirrorMap) {
-        Set<Integer> visitedTiles = new HashSet<>();
+        Set<DirectionalTile> visitedTiles = new HashSet<>();
         Deque<DirectionalTile> visitNext = new ArrayDeque<>();
         visitNext.addFirst(start);
         boolean[][] visitedMap = new boolean[mirrorMap.length][mirrorMap[0].length];
@@ -58,8 +58,8 @@ public class Day16 implements Solution {
 
         while (!visitNext.isEmpty()) {
             DirectionalTile directionalTile = visitNext.poll();
-            if (visitedTiles.contains(directionalTile.hashCode())) continue;
-            visitedTiles.add(directionalTile.hashCode());
+            if (visitedTiles.contains(directionalTile)) continue;
+            visitedTiles.add(directionalTile);
 
             Direction currentDirection = directionalTile.direction();
             Vec2 newPosition = directionalTile.pos().plus(currentDirection.vec2());
