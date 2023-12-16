@@ -1,6 +1,7 @@
 package me.wolfii.implementations.day10;
 
 import me.wolfii.automation.Solution;
+import me.wolfii.implementations.common.Direction;
 import me.wolfii.implementations.common.Vec2;
 
 import java.util.*;
@@ -64,7 +65,7 @@ public class Day10 implements Solution {
     private List<Vec2> getLoop(Vec2 start, HashMap<Vec2, Pipe> pipes, Direction startDirection) {
         List<Vec2> tiles = new ArrayList<>();
         tiles.add(start);
-        Vec2 currentTile = start.plus(startDirection.vec2);
+        Vec2 currentTile = start.plus(startDirection.vec2());
         Direction to = startDirection;
         while (!currentTile.equals(start)) {
             if (!pipes.containsKey(currentTile)) return List.of();
@@ -75,7 +76,7 @@ public class Day10 implements Solution {
             tiles.add(currentTile);
             to = currentPipe.getExit(to.inverted());
 
-            currentTile = currentTile.plus(to.vec2);
+            currentTile = currentTile.plus(to.vec2());
         }
         return tiles;
     }
@@ -89,8 +90,8 @@ public class Day10 implements Solution {
             Vec2 currentTile = loop.get(i);
             Pipe currentPipe = pipes.get(currentTile);
             if (currentPipe.isStraight()) {
-                rightwardsTiles.add(currentTile.plus(direction.turnRight().vec2));
-                leftwardsTiles.add(currentTile.plus(direction.turnLeft().vec2));
+                rightwardsTiles.add(currentTile.plus(direction.turnRight().vec2()));
+                leftwardsTiles.add(currentTile.plus(direction.turnLeft().vec2()));
                 continue;
             }
             for (Vec2 neighbour : currentPipe.disconnectedNeighbours()) {

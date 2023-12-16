@@ -1,6 +1,4 @@
-package me.wolfii.implementations.day10;
-
-import me.wolfii.implementations.common.Vec2;
+package me.wolfii.implementations.common;
 
 public enum Direction {
     NORTH(0, -1),
@@ -13,6 +11,10 @@ public enum Direction {
 
     Direction(int x, int y) {
         vec2 = new Vec2(x, y);
+    }
+
+    public Vec2 vec2() {
+        return this.vec2;
     }
 
     public static Direction of(Vec2 vector) {
@@ -56,5 +58,33 @@ public enum Direction {
             case WEST -> EAST;
             default -> this;
         };
+    }
+
+    public Direction mirrorFirstMedian() {
+        return switch (this) {
+            case NORTH -> EAST;
+            case SOUTH -> WEST;
+            case EAST -> NORTH;
+            case WEST -> SOUTH;
+            default -> this;
+        };
+    }
+
+    public Direction mirrorSecondMedian() {
+        return switch (this) {
+            case NORTH -> WEST;
+            case SOUTH -> EAST;
+            case EAST -> SOUTH;
+            case WEST -> NORTH;
+            default -> this;
+        };
+    }
+
+    public boolean isVertical() {
+        return this == NORTH || this == SOUTH;
+    }
+
+    public boolean isHorizontal() {
+        return this == EAST || this == WEST;
     }
 }

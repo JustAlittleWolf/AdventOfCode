@@ -1,5 +1,6 @@
 package me.wolfii.implementations.day10;
 
+import me.wolfii.implementations.common.Direction;
 import me.wolfii.implementations.common.Vec2;
 
 import java.util.ArrayList;
@@ -72,8 +73,8 @@ public class Pipe {
 
     public List<Vec2> disconnectedNeighbours() {
         List<Vec2> disconnectedTilesRelative = new ArrayList<>(Vec2.NEIGHBOURS_NEXTTO);
-        disconnectedTilesRelative.remove(first.vec2);
-        disconnectedTilesRelative.remove(second.vec2);
+        disconnectedTilesRelative.remove(first.vec2());
+        disconnectedTilesRelative.remove(second.vec2());
 
         return disconnectedTilesRelative;
     }
