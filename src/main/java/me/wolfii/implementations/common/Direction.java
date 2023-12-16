@@ -1,20 +1,26 @@
 package me.wolfii.implementations.common;
 
 public enum Direction {
-    NORTH(0, -1),
-    SOUTH(0, 1),
-    EAST(1, 0),
-    WEST(-1, 0),
-    NONE(0, 0),
-    UNKNOWN(0, 0);
+    NORTH(0, -1, 0b1),
+    SOUTH(0, 1, 0b10),
+    EAST(1, 0, 0b100),
+    WEST(-1, 0, 0b1000),
+    NONE(0, 0, 0b10000),
+    UNKNOWN(0, 0, 0b100000);
     final Vec2 vec2;
+    final int bitmask;
 
-    Direction(int x, int y) {
+    Direction(int x, int y, int bitmask) {
         vec2 = new Vec2(x, y);
+        this.bitmask = bitmask;
     }
 
     public Vec2 vec2() {
         return this.vec2;
+    }
+
+    public int bitmask() {
+        return this.bitmask;
     }
 
     public static Direction of(Vec2 vector) {

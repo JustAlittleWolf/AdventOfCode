@@ -50,45 +50,42 @@ public class Day16 implements Solution {
     }
 
     private int getCoveredTiles(DirectionalTile start, char[][] mirrorMap) {
-        Set<DirectionalTile> visitedTiles = new HashSet<>();
-        Deque<DirectionalTile> visitNext = new ArrayDeque<>();
-        visitNext.addFirst(start);
-        boolean[][] visitedMap = new boolean[mirrorMap.length][mirrorMap[0].length];
+        Deque<DirectionalTile> visitNext = new ArrayDeque<>(List.of(start));
+        int[][] visitedTiles = new int[mirrorMap.length][mirrorMap[0].length];
         int coveredCount = 0;
 
         while (!visitNext.isEmpty()) {
             DirectionalTile directionalTile = visitNext.poll();
-            if (visitedTiles.contains(directionalTile)) continue;
-            visitedTiles.add(directionalTile);
+            Direction direction = directionalTile.direction();
+            Vec2 nextPosition = directionalTile.pos().plus(direction.vec2());
+            if (nextPosition.x() < 0 || nextPosition.x() >= mirrorMap[0].length) continue;
+            if (nextPosition.y() < 0 || nextPosition.y() >= mirrorMap.length) continue;
 
-            Direction currentDirection = directionalTile.direction();
-            Vec2 newPosition = directionalTile.pos().plus(currentDirection.vec2());
-            if (newPosition.x() < 0 || newPosition.x() >= mirrorMap[0].length) continue;
-            if (newPosition.y() < 0 || newPosition.y() >= mirrorMap.length) continue;
+            int visitedDirections = visitedTiles[nextPosition.x()][nextPosition.y()];
+            if ((visitedDirections & direction.bitmask()) != 0) continue;
+            if (visitedDirections == 0) coveredCount++;
+            visitedTiles[nextPosition.x()][nextPosition.y()] |= direction.bitmask();
 
-            if(!visitedMap[newPosition.x()][newPosition.y()]) coveredCount++;
-            visitedMap[newPosition.x()][newPosition.y()] = true;
-
-            switch (mirrorMap[newPosition.x()][newPosition.y()]) {
+            switch (mirrorMap[nextPosition.x()][nextPosition.y()]) {
                 case '|' -> {
-                    if (currentDirection.isVertical()) {
-                        visitNext.add(new DirectionalTile(newPosition, currentDirection));
+                    if (direction.isVertical()) {
+                        visitNext.add(new DirectionalTile(nextPosition, direction));
                         break;
                     }
-                    visitNext.add(new DirectionalTile(newPosition, currentDirection.turnLeft()));
-                    visitNext.add(new DirectionalTile(newPosition, currentDirection.turnRight()));
+                    visitNext.add(new DirectionalTile(nextPosition, direction.turnLeft()));
+                    visitNext.add(new DirectionalTile(nextPosition, direction.turnRight()));
                 }
                 case '-' -> {
-                    if (currentDirection.isHorizontal()) {
-                        visitNext.add(new DirectionalTile(newPosition, currentDirection));
+                    if (direction.isHorizontal()) {
+                        visitNext.add(new DirectionalTile(nextPosition, direction));
                         break;
                     }
-                    visitNext.add(new DirectionalTile(newPosition, currentDirection.turnLeft()));
-                    visitNext.add(new DirectionalTile(newPosition, currentDirection.turnRight()));
+                    visitNext.add(new DirectionalTile(nextPosition, direction.turnLeft()));
+                    visitNext.add(new DirectionalTile(nextPosition, direction.turnRight()));
                 }
-                case '/' -> visitNext.add(new DirectionalTile(newPosition, currentDirection.mirrorFirstMedian()));
-                case '\\' -> visitNext.add(new DirectionalTile(newPosition, currentDirection.mirrorSecondMedian()));
-                default -> visitNext.add(new DirectionalTile(newPosition, currentDirection));
+                case '/' -> visitNext.add(new DirectionalTile(nextPosition, direction.mirrorFirstMedian()));
+                case '\\' -> visitNext.add(new DirectionalTile(nextPosition, direction.mirrorSecondMedian()));
+                default -> visitNext.add(new DirectionalTile(nextPosition, direction));
             }
         }
         return coveredCount;
