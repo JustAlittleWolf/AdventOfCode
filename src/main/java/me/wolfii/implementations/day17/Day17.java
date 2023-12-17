@@ -63,7 +63,7 @@ public class Day17 implements Solution {
                     continue;
                 }
                 visitedBitmap[position.x()][position.y()][getIndex(direction)] |= 1 << memoryVector.distance;
-                if (position.equals(target)) break outer;
+                if (memoryVector.distance >= minTurn && position.equals(target)) break outer;
                 MemoryVector straight = new MemoryVector(position.plus(direction.vec2()), direction, memoryVector.distance + 1, currentHeatLoss);
                 if (straight.distance <= maxStraight) nextProcessNext.add(straight);
                 if (straight.distance <= minTurn) continue;
