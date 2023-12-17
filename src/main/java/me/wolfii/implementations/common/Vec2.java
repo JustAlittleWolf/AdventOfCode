@@ -27,6 +27,10 @@ public record Vec2(int x, int y) {
         return new Vec2(this.x + x, this.y + y);
     }
 
+    public Vec2 multiply(int lambda) {
+        return new Vec2(this.x * lambda, this.y * lambda);
+    }
+
     public Vec2 abs() {
         return new Vec2(Math.abs(x), Math.abs(y));
     }

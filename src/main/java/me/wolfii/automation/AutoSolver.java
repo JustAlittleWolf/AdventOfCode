@@ -97,20 +97,24 @@ public class AutoSolver {
 
     private static void trySolve(Solution solution, List<String> lines, SolveSelect solveSelect, int day) {
         try {
-            long startTime = System.nanoTime();
-            if (solveSelect != SolveSelect.SECOND) solution.solveFirst(lines);
-            if (benchmark)
-                System.out.println(" took " + getBenchmarkFormatted(startTime));
+            if (solveSelect != SolveSelect.SECOND) {
+                long startTime = System.nanoTime();
+                solution.solveFirst(lines);
+                if (benchmark)
+                    System.out.println(" took " + getBenchmarkFormatted(startTime));
+            }
         } catch (Exception e) {
             System.err.println("Exception while running solution for part 1 of day " + day);
             e.printStackTrace();
         }
 
         try {
-            long startTime = System.nanoTime();
-            if (solveSelect != SolveSelect.FIRST) solution.solveSecond(lines);
-            if (benchmark)
-                System.out.println(" took " + getBenchmarkFormatted(startTime));
+            if (solveSelect != SolveSelect.FIRST) {
+                long startTime = System.nanoTime();
+                solution.solveSecond(lines);
+                if (benchmark)
+                    System.out.println(" took " + getBenchmarkFormatted(startTime));
+            }
         } catch (Exception e) {
             System.err.println("Exception while running solution for part 2 of day " + day);
             e.printStackTrace();
