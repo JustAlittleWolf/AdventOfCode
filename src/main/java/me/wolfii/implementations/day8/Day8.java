@@ -1,6 +1,7 @@
 package me.wolfii.implementations.day8;
 
 import me.wolfii.automation.Solution;
+import me.wolfii.implementations.common.MathUtil;
 
 import java.util.*;
 
@@ -64,21 +65,7 @@ public class Day8 implements Solution {
             }
             steps++;
         }
-        long leastCommonMultiple = 1;
-        for(int cycleDuration : cycleDurations) {
-            leastCommonMultiple = leastCommonMultiple(leastCommonMultiple, cycleDuration);
-        }
 
-        System.out.println("Part 2: " + leastCommonMultiple);
-    }
-
-    private long leastCommonMultiple(long number1, long number2) {
-        long absHigherNumber = Math.max(number1, number2);
-        long absLowerNumber = Math.min(number1, number2);
-        long lcm = absHigherNumber;
-        while (lcm % absLowerNumber != 0) {
-            lcm += absHigherNumber;
-        }
-        return lcm;
+        System.out.println("Part 2: " + MathUtil.lcm(cycleDurations));
     }
 }
