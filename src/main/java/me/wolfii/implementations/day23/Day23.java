@@ -20,7 +20,9 @@ public class Day23 implements Solution {
 
         Map<Vec2, List<Path>> paths = getPaths(maze);
         Vec2 start = new Vec2(1, 0);
-        long maxLength = getLongestPathFast(start, new HashSet<>(), paths, 1, maze);
+        Vec2 endPos = new Vec2(maze.length - 2, maze[0].length - 1);
+        Path lastPath = paths.get(endPos).get(0);
+        long maxLength = getLongestPathFast(start, new HashSet<>(), paths, lastPath);
 
         System.out.println("Part 2: " + maxLength);
     }
@@ -59,20 +61,19 @@ public class Day23 implements Solution {
         return -1;
     }
 
-    //"Fast", runs in a couple of secons
-    private int getLongestPathFast(Vec2 start, Set<Vec2> visitedTiles, Map<Vec2, List<Path>> paths, int steps, char[][] maze) {
-        int maxLength = 0;
-        Vec2 endPos = new Vec2(maze.length - 2, maze[0].length - 1);
-        Vec2 prevToEnd = paths.get(endPos).get(0).to();
+    //"Fast", runs in a few seconds
+    private int getLongestPathFast(Vec2 start, Set<Vec2> visitedTiles, Map<Vec2, List<Path>> paths, Path finalPath) {
+        int maxLength = -1;
         visitedTiles.add(start);
         for (Path path : paths.get(start)) {
             if (visitedTiles.contains(path.to())) continue;
-            if (path.to().equals(prevToEnd)) {
-                maxLength = Math.max(maxLength, steps + path.length() + paths.get(endPos).get(0).length());
+            if (path.to().equals(finalPath.to())) {
+                maxLength = Math.max(maxLength, path.length() + finalPath.length());
                 continue;
             }
-            maxLength = Math.max(maxLength, getLongestPathFast(path.to(), new HashSet<>(visitedTiles), paths, steps + path.length(), maze));
+            maxLength = Math.max(maxLength, path.length() + getLongestPathFast(path.to(), visitedTiles, paths, finalPath));
         }
+        visitedTiles.remove(start);
         return maxLength;
     }
 
@@ -100,24 +101,18 @@ public class Day23 implements Solution {
             while (!walkNext.isEmpty()) {
                 Vec2 pos = walkNext.pollFirst();
                 visitedPositions.add(pos);
+                steps++;
                 if (pos.equals(endPos)) {
-                    paths.putIfAbsent(start, new ArrayList<>());
-                    paths.putIfAbsent(pos, new ArrayList<>());
-                    paths.get(start).add(new Path(pos, steps));
-                    paths.get(pos).add(new Path(start, steps));
+                    addPath(paths, start, pos, steps);
                     break;
                 }
                 for (Vec2 neigh : pos.neighbours()) {
                     if (isBlocked(neigh, maze)) continue;
                     walkNext.add(neigh);
                 }
-                steps++;
                 if (walkNext.size() > 2) {
                     visitedPositions.remove(pos);
-                    paths.putIfAbsent(start, new ArrayList<>());
-                    paths.putIfAbsent(pos, new ArrayList<>());
-                    paths.get(start).add(new Path(pos, steps));
-                    paths.get(pos).add(new Path(start, steps));
+                    addPath(paths, start, pos, steps);
                     startingPositions.add(pos);
                     break;
                 }
@@ -125,6 +120,13 @@ public class Day23 implements Solution {
             }
         }
         return paths;
+    }
+
+    private void addPath(Map<Vec2, List<Path>> paths, Vec2 start, Vec2 end, int steps) {
+        paths.putIfAbsent(start, new ArrayList<>());
+        paths.putIfAbsent(end, new ArrayList<>());
+        paths.get(start).add(new Path(end, steps));
+        paths.get(end).add(new Path(start, steps));
     }
 
     private boolean isBlocked(Vec2 pos, char[][] maze) {
