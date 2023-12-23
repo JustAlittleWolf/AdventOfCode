@@ -1,6 +1,7 @@
 package me.wolfii.implementations.day16;
 
 import me.wolfii.automation.Solution;
+import me.wolfii.implementations.common.InputUtil;
 import me.wolfii.implementations.common.Vec2;
 import me.wolfii.implementations.common.Direction;
 
@@ -8,14 +9,14 @@ import java.util.*;
 
 public class Day16 implements Solution {
     public void solveFirst(List<String> lines) {
-        char[][] mirrorMap = getMirrorMap(lines);
+        char[][] mirrorMap = InputUtil.getCharMap(lines);
 
         int coveredTiles = getCoveredTiles(new DirectionalTile(new Vec2(-1, 0), Direction.EAST), mirrorMap);
         System.out.println("Part 1: " + coveredTiles);
     }
 
     public void solveSecond(List<String> lines) {
-        char[][] mirrorMap = getMirrorMap(lines);
+        char[][] mirrorMap = InputUtil.getCharMap(lines);
         int width = lines.get(0).length();
         int height = lines.size();
 
@@ -37,16 +38,6 @@ public class Day16 implements Solution {
         }
 
         System.out.println("Part 2: " + maximum);
-    }
-
-    private char[][] getMirrorMap(List<String> lines) {
-        char[][] mirrorMap = new char[lines.get(0).length()][lines.size()];
-        for (int y = 0; y < lines.size(); y++) {
-            for (int x = 0; x < lines.get(0).length(); x++) {
-                mirrorMap[x][y] = lines.get(y).charAt(x);
-            }
-        }
-        return mirrorMap;
     }
 
     private int getCoveredTiles(DirectionalTile start, char[][] mirrorMap) {

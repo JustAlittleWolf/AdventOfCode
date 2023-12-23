@@ -1,13 +1,14 @@
 package me.wolfii.implementations.day21;
 
 import me.wolfii.automation.Solution;
+import me.wolfii.implementations.common.InputUtil;
 import me.wolfii.implementations.common.Vec2;
 
 import java.util.*;
 
 public class Day21 implements Solution {
     public void solveFirst(List<String> lines) {
-        char[][] gardenMap = getGardenMap(lines);
+        char[][] gardenMap = InputUtil.getCharMap(lines);
         Vec2 start = getStart(gardenMap);
         long possibleEndTiles = solve(start, 64, gardenMap, false);
         System.out.println("Part 1: " + possibleEndTiles);
@@ -15,7 +16,7 @@ public class Day21 implements Solution {
 
     @SuppressWarnings({"IntegerDivisionInFloatingPointContext", "DuplicatedCode"})
     public void solveSecond(List<String> lines) {
-        char[][] gardenMap = getGardenMap(lines);
+        char[][] gardenMap = InputUtil.getCharMap(lines);
 
         if(!fulfillsPart2Requirements(gardenMap)) {
             System.out.println("Part 2: Incompatible input data");
@@ -68,17 +69,6 @@ public class Day21 implements Solution {
         long bottomRight = solve(new Vec2(0, 0), steps, gardenMap, true);
         long bottomLeft = solve(new Vec2(gardenMap.length - 1, 0), steps, gardenMap, true);
         return gridsPerSide * (topRight + bottomRight + bottomLeft + topLeft);
-    }
-
-    private char[][] getGardenMap(List<String> lines) {
-        char[][] gardenMap = new char[lines.get(0).length()][lines.size()];
-        for (int y = 0; y < lines.size(); y++) {
-            String line = lines.get(y);
-            for (int x = 0; x < line.length(); x++) {
-                gardenMap[x][y] = line.charAt(x);
-            }
-        }
-        return gardenMap;
     }
 
     private Vec2 getStart(char[][] gardenMap) {

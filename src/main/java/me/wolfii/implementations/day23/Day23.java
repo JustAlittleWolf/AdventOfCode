@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Day23 implements Solution {
     public void solveFirst(List<String> lines) {
-        char[][] maze = InputUtil.getCharArray(lines);
+        char[][] maze = InputUtil.getCharMap(lines);
 
         Vec2 start = new Vec2(1, 0);
         int longestPath = getLongestPath(start, new HashSet<>(), maze);
@@ -16,7 +16,7 @@ public class Day23 implements Solution {
     }
 
     public void solveSecond(List<String> lines) {
-        char[][] maze = InputUtil.getCharArray(lines);
+        char[][] maze = InputUtil.getCharMap(lines);
 
         Map<Vec2, List<Path>> paths = getPaths(maze);
         Vec2 start = new Vec2(1, 0);
