@@ -1,10 +1,5 @@
 package me.wolfii.implementations.day24;
 
-import me.wolfii.implementations.common.Vec2;
-import me.wolfii.implementations.common.Vec3;
-
-import java.awt.event.HierarchyBoundsAdapter;
-
 public record Hailstone(Vec3L position, Vec3L velocity) {
     public static Hailstone of(String line) {
         String[] parts = line.split(" @ ");

@@ -19,13 +19,16 @@ public class Day24 implements Solution {
         for (Hailstone hailstone : hailstones) {
             for (Hailstone other : hailstones) {
                 if (hailstone == other) continue;
-                if(hailstone.pathsIntersect(other, AREA_MIN, AREA_MAX, AREA_MIN, AREA_MAX)) crossedPaths++;
+                if (hailstone.pathsIntersect(other, AREA_MIN, AREA_MAX, AREA_MIN, AREA_MAX)) crossedPaths++;
             }
         }
         System.out.println(crossedPaths / 2);
     }
 
     public void solveSecond(List<String> lines) {
-
+        // Wasn't able to find a solver library for java, see
+        // https://github.com/hyper-neutrino/advent-of-code/blob/main/2023/day24p2.py for an implementation in python
+        // by HyperNeutrino
+        System.out.println("Part 2 not implemented");
     }
 }
