@@ -1,15 +1,11 @@
 package me.wolfii.implementations.day25;
 
-import me.wolfii.Main;
 import me.wolfii.automation.Solution;
 
-import java.sql.SQLSyntaxErrorException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Day25 implements Solution {
     public void solveFirst(List<String> lines) {
@@ -29,19 +25,18 @@ public class Day25 implements Solution {
                 edges.add(new Edge(elements.get(0), elements.get(1)));
             }
         }
-        Edge firstCut = findBestEdge(components, edges, 0);
-        components.get(firstCut.from).remove(firstCut.to());
-        components.get(firstCut.to).remove(firstCut.from());
-        Edge secondCut = findBestEdge(components, edges, 1);
-        components.get(secondCut.from).remove(secondCut.to());
-        components.get(secondCut.to).remove(secondCut.from());
-        Edge thirdCut = findBestEdge(components, edges, 2);
-        components.get(thirdCut.from).remove(thirdCut.to());
-        components.get(thirdCut.to).remove(thirdCut.from());
+        List<VisitedEdge> visitedEdges = calculateTimesVisited(components, edges);
+        for(VisitedEdge visitedEdge : visitedEdges.subList(0, 3)) {
+            components.get(visitedEdge.edge.from).remove(visitedEdge.edge.to());
+            components.get(visitedEdge.edge.to).remove(visitedEdge.edge.from());
+        }
 
         List<Set<String>> groups = getGroups(components);
-        assert groups.size() == 2;
-        System.out.println(groups.get(0).size() * groups.get(1).size());
+        if(groups.size() != 2) {
+            System.out.println("No subgroups found");
+            return;
+        }
+        System.out.println("Part 1: " + groups.get(0).size() * groups.get(1).size());
     }
 
     private List<Set<String>> getGroups(Map<String, List<String>> components) {
@@ -66,17 +61,16 @@ public class Day25 implements Solution {
         return groups;
     }
 
-    private Edge findBestEdge(Map<String, List<String>> components, Set<Edge> edges, int part) {
-        int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+    private List<VisitedEdge> calculateTimesVisited(Map<String, List<String>> components, Set<Edge> edges) {
+        int NUM_THREADS = Runtime.getRuntime().availableProcessors() - 1;
         final ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
         List<Future<Map<Edge, Integer>>> futures = new ArrayList<>();
-        AtomicInteger routesChecked = new AtomicInteger(0);
         double totalChecks = components.size() * components.size() / 2d;
         double checksPerThread = totalChecks / (double) NUM_THREADS;
         for (int i = 0; i < NUM_THREADS; i++) {
             int from = (int) Math.floor(components.size() - Math.sqrt(components.size() * components.size() - 2 * checksPerThread * i));
             int to = (int) Math.floor(components.size() - Math.sqrt(components.size() * components.size() - 2 * checksPerThread * (i + 1)));
-            futures.add(executorService.submit(() -> findBestEdgePartial(components, from, to, routesChecked, part)));
+            futures.add(executorService.submit(() -> calculateTimesVisitedPartial(components, from, to)));
         }
         List<Map<Edge, Integer>> visitedCounts = new ArrayList<>();
         try {
@@ -86,32 +80,30 @@ public class Day25 implements Solution {
         } catch (Exception ignored) {
         }
         executorService.shutdown();
-        Edge bestEdge = null;
-        int maximumVisited = 0;
+        List<VisitedEdge> visitedEdges = new ArrayList<>();
         for (Edge edge : edges) {
             int numVisited = 0;
             for (Map<Edge, Integer> visitedCount : visitedCounts) {
                 numVisited += visitedCount.getOrDefault(edge, 0);
             }
-            if (numVisited <= maximumVisited) continue;
-            bestEdge = edge;
-            maximumVisited = numVisited;
+            visitedEdges.add(new VisitedEdge(edge, numVisited));
         }
-        return bestEdge;
+        visitedEdges.sort(Comparator.comparingInt(VisitedEdge::timesVisited));
+        Collections.reverse(visitedEdges);
+        return visitedEdges;
     }
 
-    private Map<Edge, Integer> findBestEdgePartial(Map<String, List<String>> components, int from, int to, AtomicInteger routesChecked, int part) {
+    private Map<Edge, Integer> calculateTimesVisitedPartial(Map<String, List<String>> components, int from, int to) {
         Map<Edge, Integer> visitedCount = new HashMap<>();
         List<String> keys = new ArrayList<>(components.keySet());
+        double chanceToIgnore = 1d - Math.min(1d, 2000d / (components.size() * components.size()));
         for (int i = from; i < to; i++) {
             String start = keys.get(i);
             for (int j = i + 1; j < components.size(); j++) {
+                if(Math.random() < chanceToIgnore) continue;
                 String end = keys.get(j);
                 updateVisitedCount(start, end, components, visitedCount);
             }
-            int count = routesChecked.getAndIncrement();
-            if (count % 16 == 15)
-                System.out.println("Calculating...\t" + String.format("%.1f", 100f * (count + part * components.size()) / (components.size() * 3)) + "%");
         }
         return visitedCount;
     }
@@ -154,4 +146,6 @@ public class Day25 implements Solution {
 
     private record Edge(String from, String to) {
     }
+
+    private record VisitedEdge(Edge edge, int timesVisited) {}
 }
