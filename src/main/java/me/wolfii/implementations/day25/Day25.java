@@ -1,9 +1,15 @@
 package me.wolfii.implementations.day25;
 
+import me.wolfii.Main;
 import me.wolfii.automation.Solution;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Day25 implements Solution {
     public void solveFirst(List<String> lines) {
@@ -24,14 +30,14 @@ public class Day25 implements Solution {
             }
         }
         Edge firstCut = findBestEdge(components, edges, 0);
-        components.get(firstCut.from).remove( firstCut.to());
-        components.get(firstCut.to).remove( firstCut.from());
+        components.get(firstCut.from).remove(firstCut.to());
+        components.get(firstCut.to).remove(firstCut.from());
         Edge secondCut = findBestEdge(components, edges, 1);
-        components.get(secondCut.from).remove( secondCut.to());
-        components.get(secondCut.to).remove( secondCut.from());
+        components.get(secondCut.from).remove(secondCut.to());
+        components.get(secondCut.to).remove(secondCut.from());
         Edge thirdCut = findBestEdge(components, edges, 2);
-        components.get(thirdCut.from).remove( thirdCut.to());
-        components.get(thirdCut.to).remove( thirdCut.from());
+        components.get(thirdCut.from).remove(thirdCut.to());
+        components.get(thirdCut.to).remove(thirdCut.from());
 
         List<Set<String>> groups = getGroups(components);
         assert groups.size() == 2;
@@ -48,9 +54,9 @@ public class Day25 implements Solution {
             Set<String> remainingPoints = new HashSet<>(components.keySet());
             remainingPoints.removeAll(visited);
             visitNext.add(remainingPoints.iterator().next());
-            while(!visitNext.isEmpty()) {
+            while (!visitNext.isEmpty()) {
                 String position = visitNext.pollFirst();
-                if(visited.contains(position)) continue;
+                if (visited.contains(position)) continue;
                 visited.add(position);
                 group.add(position);
                 visitNext.addAll(components.get(position));
@@ -61,24 +67,53 @@ public class Day25 implements Solution {
     }
 
     private Edge findBestEdge(Map<String, List<String>> components, Set<Edge> edges, int part) {
-        Map<Edge, Integer> visitedCount = new HashMap<>();
-        List<String> keys = new ArrayList<>(components.keySet());
-        for (int i = 0; i < components.size(); i++) {
-            String start = keys.get(i);
-            for(int j = i + 1; j < components.size(); j++) {
-                String end = keys.get(j);
-                updateVisitedCount(start, end, components, visitedCount);
-            }
-            if(i % 16 == 15) System.out.println("Calculating...\t" + String.format("%.1f", 100f * (i + part * components.size()) / (components.size() * 3)) + "%");
+        int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+        final ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
+        List<Future<Map<Edge, Integer>>> futures = new ArrayList<>();
+        AtomicInteger routesChecked = new AtomicInteger(0);
+        double totalChecks = components.size() * components.size() / 2d;
+        double checksPerThread = totalChecks / (double) NUM_THREADS;
+        for (int i = 0; i < NUM_THREADS; i++) {
+            int from = (int) Math.floor(components.size() - Math.sqrt(components.size() * components.size() - 2 * checksPerThread * i));
+            int to = (int) Math.floor(components.size() - Math.sqrt(components.size() * components.size() - 2 * checksPerThread * (i + 1)));
+            futures.add(executorService.submit(() -> findBestEdgePartial(components, from, to, routesChecked, part)));
         }
+        List<Map<Edge, Integer>> visitedCounts = new ArrayList<>();
+        try {
+            for (Future<Map<Edge, Integer>> future : futures) {
+                visitedCounts.add(future.get());
+            }
+        } catch (Exception ignored) {
+        }
+        executorService.shutdown();
         Edge bestEdge = null;
         int maximumVisited = 0;
         for (Edge edge : edges) {
-            if (visitedCount.getOrDefault(edge, 0) <= maximumVisited) continue;
+            int numVisited = 0;
+            for (Map<Edge, Integer> visitedCount : visitedCounts) {
+                numVisited += visitedCount.getOrDefault(edge, 0);
+            }
+            if (numVisited <= maximumVisited) continue;
             bestEdge = edge;
-            maximumVisited = visitedCount.get(edge);
+            maximumVisited = numVisited;
         }
         return bestEdge;
+    }
+
+    private Map<Edge, Integer> findBestEdgePartial(Map<String, List<String>> components, int from, int to, AtomicInteger routesChecked, int part) {
+        Map<Edge, Integer> visitedCount = new HashMap<>();
+        List<String> keys = new ArrayList<>(components.keySet());
+        for (int i = from; i < to; i++) {
+            String start = keys.get(i);
+            for (int j = i + 1; j < components.size(); j++) {
+                String end = keys.get(j);
+                updateVisitedCount(start, end, components, visitedCount);
+            }
+            int count = routesChecked.getAndIncrement();
+            if (count % 16 == 15)
+                System.out.println("Calculating...\t" + String.format("%.1f", 100f * (count + part * components.size()) / (components.size() * 3)) + "%");
+        }
+        return visitedCount;
     }
 
     private void updateVisitedCount(String start, String end, Map<String, List<String>> components, Map<Edge, Integer> visitedCount) {
@@ -94,7 +129,7 @@ public class Day25 implements Solution {
             if (visited.contains(position)) continue;
             visited.add(position);
             for (String next : components.get(position)) {
-                if(!bestPrevious.containsKey(next)) bestPrevious.put(next, position);
+                if (!bestPrevious.containsKey(next)) bestPrevious.put(next, position);
                 visitNext.add(next);
             }
         }
@@ -103,13 +138,13 @@ public class Day25 implements Solution {
             String prev = pos;
             pos = bestPrevious.get(pos);
             Edge edge;
-            if(pos.compareTo(prev) < 0) {
+            if (pos.compareTo(prev) < 0) {
                 edge = new Edge(pos, prev);
             } else {
                 edge = new Edge(prev, pos);
             }
             int count = visitedCount.getOrDefault(edge, 0);
-            visitedCount.put(edge, count +1);
+            visitedCount.put(edge, count + 1);
         }
     }
 
@@ -117,5 +152,6 @@ public class Day25 implements Solution {
 
     }
 
-    private record Edge(String from, String to) {}
+    private record Edge(String from, String to) {
+    }
 }

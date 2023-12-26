@@ -11,6 +11,6 @@ public class Main {
         AutoSolver.setSessionToken(EnvReader.get("ADVENT_OF_CODE_SESSION_TOKEN"));
         //AutoSolver.enableBenchmark();
 
-        AutoSolver.solveToday(SolveEnvironment.TEST_THEN_PROD);
+        AutoSolver.solve(25, SolveEnvironment.TEST_THEN_PROD);
     }
 }
