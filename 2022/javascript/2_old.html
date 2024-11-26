@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2</title>
+    <script>
+        function calculate() {
+            let input = document.getElementById("input").value;
+            let rounds = input.split("\n");
+            let points = rounds.map((element) => {
+                let points = 0;
+                let round = element.split(" ");
+                switch (round[1]) {
+                    case "X": //rock
+                        round[1] = 1;
+                        points += 1;
+                        break;
+                    case "Y": //paper
+                        round[1] = 2;
+                        points += 2;
+                        break;
+                    case "Z": //scissors
+                        round[1] = 3;
+                        points += 3;
+                        break;
+                }
+                switch (round[0]) {
+                    case "A": //rock
+                        round[0] = 1;
+                        break;
+                    case "B": //paper
+                        round[0] = 2;
+                        break;
+                    case "C": //scissors
+                        round[0] = 3;
+                        break;
+                }
+                let result = round[1] - round[0];
+                if (result == 0) {
+                    points += 3;
+                } else if (result == -2 || result == 1) {
+                    points += 6;
+                }
+                return points;
+            });
+            let sum = 0;
+            points.forEach(element => {
+                sum += element;
+            });
+            document.getElementById("output").value = sum * 1.0;
+        }
+    </script>
+</head>
+
+<body>
+    Input
+    <br>
+    <textarea name="input" id="input" cols="30" rows="10"></textarea>
+    <br>
+    <button onclick="calculate()">Submit</button>
+    <br>
+    <br>
+    Output
+    <br>
+    <textarea name="output" id="output" cols="30" rows="10" readonly></textarea>
+</body>
+
+</html>

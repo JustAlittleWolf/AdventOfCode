@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 5</title>
+    <script>
+        function calculate() {
+            let input = document.getElementById("input").value.split("\n\n");
+            let commands = input[1].split("\n");
+            let cargoSpace = new CargoSpace(input[0]);
+            commands.forEach(element => {
+                if (element == "") return;
+                let subCommands = element.split(" ");
+                CrateStack.moveCrate(cargoSpace.crateStacks[subCommands[3] - 1], cargoSpace.crateStacks[
+                    subCommands[5] - 1], subCommands[1]);
+            });
+            document.getElementById("output").value = "CrateMover 9000: " + cargoSpace.crateStacks.reduce((accumulator,
+                currentValue) => accumulator + currentValue.topCrate, "");
+
+            cargoSpace = new CargoSpace(input[0]);
+            commands.forEach(element => {
+                if (element == "") return;
+                let subCommands = element.split(" ");
+                CrateStack.moveCrate9001(cargoSpace.crateStacks[subCommands[3] - 1], cargoSpace.crateStacks[
+                    subCommands[5] - 1], subCommands[1]);
+            });
+            console.log(cargoSpace);
+            document.getElementById("output").value += "\nCrateMover 9001: " + cargoSpace.crateStacks.reduce((accumulator,
+                currentValue) => accumulator + currentValue.topCrate, "");
+        }
+
+        class CrateStack {
+            constructor(input) {
+                this.crates = input.split("");
+            }
+
+            static moveCrate(from, to, number) {
+                for (let i = 0; i < number; i++) {
+                    to.crates.splice(0, 0, from.crates[0]);
+                    from.crates.splice(0, 1);
+                }
+            }
+
+            static moveCrate9001(from, to, number) {
+                    to.crates = from.crates.slice(0, number).concat(to.crates);
+                    from.crates.splice(0, number);
+            }
+
+            get topCrate() {
+                return this.crates[0];
+            }
+
+            get size() {
+                return this.crates.length;
+            }
+        }
+
+        class CargoSpace {
+            constructor(input) {
+                let rows = input.split("\n");
+                rows[rows.length - 1] = rows[rows.length - 1].trim();
+                rows[rows.length - 1] = rows[rows.length - 1].split(" ");
+                this.columns = rows[rows.length - 1][rows[rows.length - 1].length - 1];
+                rows.splice(rows.length - 1, 1);
+                this.crateStacks = [];
+                for (let i = 0; i < this.columns; i++) {
+                    let crates = "";
+                    rows.forEach(element => {
+                        let index = 1 + i * 4;
+                        if (element[index] != " ") crates += element[index];
+                    });
+                    this.crateStacks.push(new CrateStack(crates));
+                }
+            }
+
+            get rows() {
+                return this.crateStacks.reduce((accumulator, currentValue) => Math.max(accumulator, currentValue
+                    .size), 0)
+            }
+        }
+    </script>
+</head>
+
+<body>
+    Input
+    <br>
+    <textarea name="input" id="input" cols="30" rows="10"></textarea>
+    <br>
+    <button onclick="calculate()">Submit</button>
+    <br>
+    <br>
+    Output
+    <br>
+    <textarea name="output" id="output" cols="30" rows="10" readonly></textarea>
+</body>
+
+</html>

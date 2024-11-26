@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 6</title>
+    <script>
+        function calculate() {
+            let input = document.getElementById("input").value;
+            let history = [];
+            for (let i = 0; i < input.length; i++) {
+                if (history.length > 3) history.splice(0, 1);
+                history = history.concat(input[i]);
+                if (history.length < 4) continue;
+
+                if(!history.reduce((accumulator, currentValue, index) => {
+                    if (accumulator) return true;
+                    if(history.slice(0, index).includes(currentValue)) return true;
+                    return false;
+                }, false)) {
+                    document.getElementById("output").value = "Packet Start: " + (i + 1);
+                    break;
+                }
+            }
+
+            history = [];
+            for (let i = 0; i < input.length; i++) {
+                if (history.length > 13) history.splice(0, 1);
+                history = history.concat(input[i]);
+                if (history.length < 14) continue;
+
+                if(!history.reduce((accumulator, currentValue, index) => {
+                    if (accumulator) return true;
+                    if(history.slice(0, index).includes(currentValue)) return true;
+                    return false;
+                }, false)) {
+                    document.getElementById("output").value += "\nMessage start: " + (i + 1);
+                    break;
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    Input
+    <br>
+    <textarea name="input" id="input" cols="30" rows="10"></textarea>
+    <br>
+    <button onclick="calculate()">Submit</button>
+    <br>
+    <br>
+    Output
+    <br>
+    <textarea name="output" id="output" cols="30" rows="10" readonly></textarea>
+</body>
+
+</html>

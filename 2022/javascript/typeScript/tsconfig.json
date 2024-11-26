@@ -1,0 +1,19 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "target": "ESNext",
+        "removeComments": false,
+        "noImplicitAny": false,
+        "suppressImplicitAnyIndexErrors": true,
+        "outDir": "../",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "moduleDetection": "force"
+    },
+    "exclude": ["node_modules"],
+    "include": [
+        "./*.ts"
+    ]
+}

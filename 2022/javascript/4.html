@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 4</title>
+    <script>
+        function calculate() {
+            let input = document.getElementById("input").value;
+            let pairs = input.split("\n");
+            pairs = pairs.map(element => {
+                if (!element.includes(",")) return 0;
+                let sections = element.split(",");
+                sections = sections.map(element => new Section(element));
+                sections = sections[0].size >= sections[1].size ? sections : sections.reverse();
+                if (sections[0].start <= sections[1].start && sections[0].end >= sections[1].end) {
+                    return 1;
+                }
+                return 0;
+            });
+            document.getElementById("output").value = "Complete overlap: " + pairs.reduce((a, b) => a + b, 0);
+
+            pairs = input.split("\n");
+            pairs = pairs.map(element => {
+                if (!element.includes(",")) return 0;
+                let sections = element.split(",");
+                sections = sections.map(element => new Section(element));
+                sections = sections[0].size >= sections[1].size ? sections : sections.reverse();
+                if (sections[0].overlaps(sections[1])) return 1;
+                return 0;
+            });
+            document.getElementById("output").value += "\nPartial overlap: " + pairs.reduce((a, b) => a + b, 0);
+        }
+
+        class Section {
+            constructor(section) {
+                let borders = section.split("-");
+                this.start = parseFloat(borders[0]);
+                this.end = parseFloat(borders[1]);
+                this.size = this.end - this.start + 1
+            }
+
+            overlaps(otherSection) {
+                if (this.isWithin(otherSection.start) || this.isWithin(otherSection.end)) return true;
+                return false;
+            }
+
+
+            isWithin(number) {
+                if (number >= this.start && number <= this.end) return true;
+                return false;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    Input
+    <br>
+    <textarea name="input" id="input" cols="30" rows="10"></textarea>
+    <br>
+    <button onclick="calculate()">Submit</button>
+    <br>
+    <br>
+    Output
+    <br>
+    <textarea name="output" id="output" cols="30" rows="10" readonly></textarea>
+</body>
+
+</html>

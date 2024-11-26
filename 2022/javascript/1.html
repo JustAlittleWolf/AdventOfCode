@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 1</title>
+    <script>
+        function calculate() {
+            let input = document.getElementById("input").value;
+            let elves = input.split("\n\n");
+            let elvesSum = [];
+            elves.forEach((element, index) => {
+                let foods = element.split("\n");
+                let sum = 0;
+                foods.forEach(food => {
+                    sum += food * 1.0;
+                });
+                elvesSum.push(sum);
+            });
+            elvesSum.sort((a, b) => b - a);
+            let max = elvesSum[0];
+            document.getElementById("output").value = "Top 1 Elf: " + max;
+            let max3 = elvesSum[0] + elvesSum[1] + elvesSum[2];
+            document.getElementById("output").value += "\nTop 3 Elves: " + max3;
+        }
+    </script>
+</head>
+
+<body>
+    Input
+    <br>
+    <textarea name="input" id="input" cols="30" rows="10"></textarea>
+    <br>
+    <button onclick="calculate()">Submit</button>
+    <br>
+    <br>
+    Output
+    <br>
+    <textarea name="output" id="output" cols="30" rows="10" readonly></textarea>
+</body>
+
+</html>
