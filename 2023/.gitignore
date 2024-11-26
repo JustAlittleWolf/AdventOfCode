@@ -1,0 +1,7 @@
+### Inputs ###
+inputs
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+out/
