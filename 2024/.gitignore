@@ -1,0 +1,7 @@
+.gradle
+build
+.idea
+gradle
+inputs
+*.env
+!example.env
