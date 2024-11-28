@@ -1,5 +1,6 @@
 ### Inputs ###
 inputs
+config.env
 
 ### IntelliJ IDEA ###
 .idea/
