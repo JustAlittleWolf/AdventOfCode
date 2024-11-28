@@ -33,7 +33,7 @@ object Solver {
 
         val solution = runCatching { Class.forName(solveOptions.classPath()).kotlin.primaryConstructor?.call() as Solution }.getOrNull()
         if (solution == null) {
-            printErr("Could not find solution under ${solveOptions.classPath()}")
+            printErr("Could not find solution class ${solveOptions.classPath()}")
             return
         }
 
@@ -55,16 +55,11 @@ object Solver {
     }
 
     private fun runProblem(name: String, solution: (List<String>) -> Any?, lines: List<String>, solveOptions: SolveOptions) {
-        if (!solveOptions.measure) {
-            val result = solution.invoke(lines)
-            if (result != Unit) println("$name: $result")
-            return
-        }
         val startNanos = System.nanoTime()
         val result = solution.invoke(lines)
         val diff = System.nanoTime() - startNanos
         if (result != Unit) println("$name: $result")
-        println("$name took ${diff.toDuration(DurationUnit.NANOSECONDS)}")
+        if(solveOptions.measure) println("$name took ${diff.toDuration(DurationUnit.NANOSECONDS)}")
     }
 
     private fun downloadInput(solveOptions: SolveOptions) {
