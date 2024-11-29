@@ -31,7 +31,10 @@ object Solver {
             runs.add(Run(solveOptions.day.toString(), solveOptions.realFile()))
         }
 
-        val solution = runCatching { Class.forName(solveOptions.classPath()).kotlin.primaryConstructor?.call() as Solution }.getOrNull()
+        val solution = runCatching {
+            val clazz = Class.forName(solveOptions.classPath())
+            return@runCatching clazz.kotlin.primaryConstructor?.call() as? Solution ?: clazz.getDeclaredConstructor().newInstance() as? Solution
+        }.getOrNull()
         if (solution == null) {
             printErr("Could not find solution class ${solveOptions.classPath()}")
             return
@@ -59,7 +62,7 @@ object Solver {
         val result = solution.invoke(lines)
         val diff = System.nanoTime() - startNanos
         if (result != Unit) println("$name: $result")
-        if(solveOptions.measure) println("$name took ${diff.toDuration(DurationUnit.NANOSECONDS)}")
+        if (solveOptions.measure) println("$name took ${diff.toDuration(DurationUnit.NANOSECONDS)}")
     }
 
     private fun downloadInput(solveOptions: SolveOptions) {
