@@ -49,7 +49,7 @@ object Solver {
                     return@forEach
                 }
                 .getOrDefault(emptyList())
-            if (lines.isEmpty()) printErr("INFO: Input was empty")
+            if (lines.isEmpty()) printErr("INFO: Input ${r.file.name} was empty")
 
             if (solveOptions.part.runFirst()) runProblem("Part One", solution::solveFirst, lines, solveOptions)
             if (solveOptions.part.runSecond()) runProblem("Part Two", solution::solveSecond, lines, solveOptions)
