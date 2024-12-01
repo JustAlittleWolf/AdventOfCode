@@ -7,7 +7,6 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
-import kotlin.reflect.full.primaryConstructor
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -33,7 +32,7 @@ object Solver {
 
         val solution = runCatching {
             val clazz = Class.forName(solveOptions.classPath())
-            return@runCatching clazz.kotlin.primaryConstructor?.call() as? Solution ?: clazz.getDeclaredConstructor().newInstance() as? Solution
+            return@runCatching clazz.getDeclaredConstructor().newInstance() as? Solution ?: clazz.kotlin.constructors.firstOrNull()?.call() as? Solution
         }.getOrNull()
         if (solution == null) {
             printErr("Could not find solution class ${solveOptions.classPath()}")
