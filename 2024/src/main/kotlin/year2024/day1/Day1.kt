@@ -1,33 +1,23 @@
 package me.wolfii.year2024.day1
 
 import me.wolfii.automation.Solution
-import java.util.*
 import kotlin.math.abs
 
 class Day1 : Solution {
     override fun solveFirst(lines: List<String>): Any? {
-        val leftList = PriorityQueue<Int>()
-        val rightList = PriorityQueue<Int>()
+        val leftList = lines.map { it.firstId() }.sorted()
+        val rightList = lines.map { it.secondId() }.sorted()
 
-        lines.forEach { line ->
-            leftList.add(line.firstId())
-            rightList.add(line.secondId())
-        }
-
-        var sum = 0
-        while (leftList.isNotEmpty()) {
-            sum += abs(leftList.poll() - rightList.poll())
-        }
-        return sum
+        return leftList.indices
+            .sumOf { i -> abs(leftList[i] - rightList[i]) }
     }
 
     override fun solveSecond(lines: List<String>): Any? {
-        val keys = HashSet<Int>()
-        lines.forEach { line -> keys.add(line.firstId()) }
-        return lines.sumOf { line ->
-            val value = line.secondId()
-            if (keys.contains(value)) return@sumOf value else 0
-        }
+        val keys = lines.map { it.firstId() }.toSet()
+        return lines
+            .map { it.secondId() }
+            .filter { keys.contains(it) }
+            .sum()
     }
 
     private fun String.firstId() = substringBefore(' ').toInt()
