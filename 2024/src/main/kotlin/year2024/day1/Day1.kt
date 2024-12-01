@@ -4,7 +4,7 @@ import me.wolfii.automation.Solution
 import kotlin.math.abs
 
 class Day1 : Solution {
-    override fun solveFirst(lines: List<String>): Any? {
+    override fun solveFirst(lines: List<String>): Int {
         val leftList = lines.map { it.firstId() }.sorted()
         val rightList = lines.map { it.secondId() }.sorted()
 
@@ -12,7 +12,7 @@ class Day1 : Solution {
             .sumOf { i -> abs(leftList[i] - rightList[i]) }
     }
 
-    override fun solveSecond(lines: List<String>): Any? {
+    override fun solveSecond(lines: List<String>): Int {
         val keys = lines.map { it.firstId() }.toSet()
         return lines
             .map { it.secondId() }
