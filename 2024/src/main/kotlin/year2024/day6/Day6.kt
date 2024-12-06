@@ -6,22 +6,23 @@ import java.util.*
 
 class Day6 : Solution {
     override fun solveFirst(lines: List<String>): Int {
-        return lines.findKnight().explore(lines.toCharField()).visited().size
+        return lines.findGuard().explore(lines.toCharField()).visited().size
     }
 
     override fun solveSecond(lines: List<String>): Int {
         val field = lines.toMutableCharField()
-        val knight = lines.findKnight()
-        return knight.explore(field).visited()
+        val guard = lines.findGuard()
+        return guard.explore(field).visited()
             .count { pos ->
+                if (pos == guard) return@count false
                 field[pos] = '#'
-                val result = knight.explore(field).isLoop
+                val result = guard.explore(field).isLoop
                 field[pos] = '.'
                 return@count result
             }
     }
 
-    private fun List<String>.findKnight() = this.indexOfFirst { it.contains('^') }.let { y -> Vec2I(this[y].indexOf('^'), y) }
+    private fun List<String>.findGuard() = this.indexOfFirst { it.contains('^') }.let { y -> Vec2I(this[y].indexOf('^'), y) }
 
     private fun Vec2I.explore(field: Field<Char>): Trip {
         var position = this
