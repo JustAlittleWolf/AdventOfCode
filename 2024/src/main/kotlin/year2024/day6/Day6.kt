@@ -29,7 +29,7 @@ class Day6 : Solution {
         var direction = Direction.NORTH
         val visited = EnumMap<Direction, MutableSet<Vec2I>>(Direction.entries.associateWith { HashSet() })
 
-        while (field.isInside(position)) {
+        while (position inside field) {
             if (visited.getValue(direction).contains(position)) return Trip(visited, true)
             visited.getValue(direction).add(position)
 
