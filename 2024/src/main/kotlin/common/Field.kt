@@ -10,6 +10,9 @@ interface Field<T> {
     operator fun get(pos: Vec2I): T? = get(pos.x, pos.y)
     operator fun get(x: Int, y: Int): T? = rows().getOrNull(y)?.getOrNull(x)
 
+    fun getValue(pos: Vec2I): T = getValue(pos.x, pos.y)
+    fun getValue(x: Int, y: Int) = rows()[y][x]
+
     fun isInside(pos: Vec2I): Boolean = isInside(pos.x, pos.y)
     fun isInside(x: Int, y: Int): Boolean = x >= 0 && y >= 0 && x < width && y < height
 
@@ -47,6 +50,8 @@ class MutableFieldImpl<T>(private val rows: List<MutableList<T>>) : MutableField
     }
 }
 
+infix fun Vec2I.inside(field: Field<*>) = field.isInside(this)
+
 fun List<String>.toCharField(): Field<Char> = FieldImpl(this.map { it.toCharArray().filterNot(Char::isWhitespace) })
 fun List<String>.toMutableCharField(): MutableField<Char> = MutableFieldImpl(this.map { it.toCharArray().filterNot(Char::isWhitespace).toMutableList() })
 
@@ -64,10 +69,30 @@ fun <T> Field<T>.toMutableField(): MutableField<T> {
     return MutableFieldImpl<T>(this.rows().map { row -> row.mapTo(ArrayList<T>()) { it } })
 }
 
-fun <T, R> Field<T>.map(transform: (T) -> R): Field<R> {
+inline fun <T, R> Field<T>.map(transform: (T) -> R): Field<R> {
     return FieldImpl(rows().map { row -> row.map(transform) })
 }
 
-fun <T, R> Field<T>.mapIndexed(transform: (Vec2I, T) -> R): Field<R> {
+inline fun <T, R> Field<T>.mapIndexed(transform: (Vec2I, T) -> R): Field<R> {
     return FieldImpl(rows().mapIndexed { y, row -> row.mapIndexed { x, value -> transform(Vec2I(x, y), value) } })
 }
+
+inline fun <T> Field<T>.forEach(action: (T) -> Unit) {
+    this.rows().forEach { row -> row.forEach(action) }
+}
+
+inline fun <T> Field<T>.forEachIndexed(action: (Vec2I, T) -> Unit) {
+    this.rows().forEachIndexed { y, row -> row.forEachIndexed { x, value -> action(Vec2I(x, y), value) } }
+}
+
+inline fun <T> Field<T>.count(predicate: (T) -> Boolean): Int = this.rows().sumOf { row -> row.count(predicate) }
+
+inline fun <T> Field<T>.countIndexed(predicate: (Vec2I, T) -> Boolean): Int {
+    var sum = 0
+    this.forEachIndexed { pos, ch -> if (predicate(pos, ch)) sum++ }
+    return sum
+}
+
+inline fun <T> Field<T>.filter(predicate: (T) -> Boolean): List<T> = ArrayList<T>().also { list -> this.forEach { ch -> if (predicate(ch)) list.add(ch) } }
+
+inline fun <T> Field<T>.filterIndexed(predicate: (Vec2I, T) -> Boolean): List<T> = ArrayList<T>().also { list -> this.forEachIndexed { pos, ch -> if (predicate(pos, ch)) list.add(ch) } }
