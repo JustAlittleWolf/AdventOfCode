@@ -23,6 +23,7 @@ class Day9 : Solution {
         while (head < tail) {
             while (head < tail && this[head].id != EMPTY_ID) head++
             while (head < tail && this[tail].id == EMPTY_ID) tail--
+            if(head >= tail) return
             for (i in head..<tail) {
                 if (this[i].id != EMPTY_ID) continue
                 if (this[i].size < this[tail].size) continue
@@ -42,6 +43,7 @@ class Day9 : Solution {
         while (head < tail) {
             while (head < tail && this[head].id != EMPTY_ID) head++
             while (head < tail && this[tail].id == EMPTY_ID) tail--
+            if (head >= tail) return
             val extraBlocks = this[head].size - this[tail].size
             when {
                 extraBlocks < 0 -> {
@@ -59,6 +61,7 @@ class Day9 : Solution {
             }
         }
     }
+
     private fun String.segments(): MutableList<Segment> =
         this.mapIndexedTo(ArrayDeque()) { index, char ->
             if (index % 2 == 0) Segment(char.digitToInt(), index / 2)
