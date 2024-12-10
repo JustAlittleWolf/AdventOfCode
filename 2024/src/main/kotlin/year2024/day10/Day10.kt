@@ -19,7 +19,7 @@ class Day10 : Solution {
             }
     }
 
-    override fun solveSecond(lines: List<String>): Any? {
+    override fun solveSecond(lines: List<String>): Int {
         val field = lines.toIntField()
         return field.hikeStartPositions()
             .sumOf { start ->
