@@ -35,4 +35,4 @@ class Day8 : Solution {
     }
 }
 
-typealias Antenna = Vec2I
+private typealias Antenna = Vec2I

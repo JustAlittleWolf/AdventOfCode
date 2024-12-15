@@ -38,7 +38,7 @@ class Day12 : Solution {
         }
     }
 
-    class Region(private val tiles: Set<Vec2I>) {
+    private class Region(private val tiles: Set<Vec2I>) {
         fun area() = tiles.size
         fun perimeter() = tiles.sumOf { tile ->
             Direction.entries.count { direction ->
@@ -71,5 +71,5 @@ class Day12 : Solution {
         }
     }
 
-    data class Side(val pos: Vec2I, val direction: Direction)
+    private data class Side(val pos: Vec2I, val direction: Direction)
 }

@@ -82,5 +82,5 @@ class Day9 : Solution {
         return sum
     }
 
-    class Segment(val size: Int, val id: Int = EMPTY_ID)
+    private class Segment(val size: Int, val id: Int = EMPTY_ID)
 }

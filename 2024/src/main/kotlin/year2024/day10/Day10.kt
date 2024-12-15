@@ -1,12 +1,7 @@
 package me.wolfii.year2024.day10
 
 import me.wolfii.automation.Solution
-import me.wolfii.common.Direction
-import me.wolfii.common.Field
-import me.wolfii.common.Vec2I
-import me.wolfii.common.map
-import me.wolfii.common.toCharField
-import kotlin.collections.sumOf
+import me.wolfii.common.*
 
 class Day10 : Solution {
     override fun solveFirst(lines: List<String>): Int {

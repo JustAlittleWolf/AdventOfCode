@@ -20,7 +20,7 @@ class Day7 : Solution {
 
     private fun String.toEquation() = Pair(substringBefore(": ").toLong(), substringAfter(": ").split(" ").map(String::toLong))
 
-    fun isValid(target: Long, values: List<Long>, workingValue: Long = values.first(), index: Int = 1, concatenation: Boolean = false): Boolean {
+    private fun isValid(target: Long, values: List<Long>, workingValue: Long = values.first(), index: Int = 1, concatenation: Boolean = false): Boolean {
         if (index == values.size) return workingValue == target
         if (workingValue > target) return false
         return isValid(target, values, workingValue + values[index], index + 1, concatenation)

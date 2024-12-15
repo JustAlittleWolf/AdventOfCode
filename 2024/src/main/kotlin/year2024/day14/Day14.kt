@@ -50,5 +50,5 @@ class Day14 : Solution {
         Vec2I(Math.floorMod(newPositionRaw.x, bounds.x), Math.floorMod(newPositionRaw.y, bounds.y))
     }
 
-    data class Robot(val position: Vec2I, val velocity: Vec2I)
+    private data class Robot(val position: Vec2I, val velocity: Vec2I)
 }

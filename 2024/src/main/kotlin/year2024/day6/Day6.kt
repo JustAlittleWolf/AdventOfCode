@@ -41,7 +41,7 @@ class Day6 : Solution {
         return Trip(visited, false)
     }
 
-    class Trip(private val visited: Map<*, Set<Vec2I>>, val isLoop: Boolean) {
+    private class Trip(private val visited: Map<*, Set<Vec2I>>, val isLoop: Boolean) {
         fun visited() = visited.flatMap { it.value }.toSet()
     }
 }

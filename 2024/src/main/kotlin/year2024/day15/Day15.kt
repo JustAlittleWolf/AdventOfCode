@@ -1,14 +1,7 @@
 package me.wolfii.year2024.day15
 
 import me.wolfii.automation.Solution
-import me.wolfii.common.Direction
-import me.wolfii.common.MutableField
-import me.wolfii.common.Vec2I
-import me.wolfii.common.toMutableCharField
-import me.wolfii.common.Field
-import me.wolfii.common.inside
-import me.wolfii.common.sumOfIndexed
-import kotlin.text.isBlank
+import me.wolfii.common.*
 
 class Day15 : Solution {
     override fun solveFirst(lines: List<String>): Long {
