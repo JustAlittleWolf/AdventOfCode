@@ -35,6 +35,8 @@ class FieldImpl<T>(private val rows: List<List<T>>) : Field<T> {
     override val indices = (0..<width).flatMap { x -> (0..<height).map { y -> Vec2I(x, y) } }
 
     override fun rows() = rows
+
+    override fun toString() = toString(this)
 }
 
 class MutableFieldImpl<T>(private val rows: List<MutableList<T>>) : MutableField<T> {
@@ -48,6 +50,20 @@ class MutableFieldImpl<T>(private val rows: List<MutableList<T>>) : MutableField
     override fun set(x: Int, y: Int, value: T) {
         rows[y][x] = value
     }
+
+    override fun toString() = toString(this)
+}
+
+private fun toString(field: Field<*>): String {
+    val stringBuilder = StringBuilder()
+    for (row in field.rows()) {
+        for (elem in row) {
+            stringBuilder.append(elem)
+        }
+        stringBuilder.append('\n')
+    }
+    stringBuilder.removeSuffix("\n")
+    return stringBuilder.toString()
 }
 
 infix fun Vec2I.inside(field: Field<*>) = field.isInside(this)
@@ -96,3 +112,15 @@ inline fun <T> Field<T>.countIndexed(predicate: (Vec2I, T) -> Boolean): Int {
 inline fun <T> Field<T>.filter(predicate: (T) -> Boolean): List<T> = ArrayList<T>().also { list -> this.forEach { ch -> if (predicate(ch)) list.add(ch) } }
 
 inline fun <T> Field<T>.filterIndexed(predicate: (Vec2I, T) -> Boolean): List<T> = ArrayList<T>().also { list -> this.forEachIndexed { pos, ch -> if (predicate(pos, ch)) list.add(ch) } }
+
+inline fun <T> Field<T>.sumOf(operation: (T) -> Long): Long {
+    var sum = 0L
+    this.forEach { sum += operation(it) }
+    return sum
+}
+
+inline fun <T> Field<T>.sumOfIndexed(operation: (Vec2I, T) -> Long): Long {
+    var sum = 0L
+    this.forEachIndexed { index, elem -> sum += operation(index, elem) }
+    return sum
+}
