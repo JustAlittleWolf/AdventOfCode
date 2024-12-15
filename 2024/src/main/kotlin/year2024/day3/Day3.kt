@@ -4,11 +4,11 @@ import me.wolfii.automation.Solution
 
 class Day3 : Solution {
     override fun solveFirst(lines: List<String>): Int {
-        return lines.joinToString().sumOfMultiplications()
+        return lines.joinToString("").sumOfMultiplications()
     }
 
     override fun solveSecond(lines: List<String>): Int {
-        return lines.joinToString().split("do()").map { it.split("don't()", limit = 2).first() }.sumOf { valid ->
+        return lines.joinToString("").split("do()").map { it.split("don't()", limit = 2).first() }.sumOf { valid ->
             valid.sumOfMultiplications()
         }
     }
