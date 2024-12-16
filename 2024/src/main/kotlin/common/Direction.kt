@@ -19,4 +19,11 @@ enum class Direction(val vec: Vec2I) {
         SOUTH -> EAST
         WEST -> SOUTH
     }
+
+    fun inverse() = when (this) {
+        NORTH -> SOUTH
+        SOUTH -> NORTH
+        EAST -> WEST
+        WEST -> EAST
+    }
 }
