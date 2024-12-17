@@ -14,14 +14,14 @@ class Day17 : Solution {
         ).joinToString(",")
     }
 
-    override fun solveSecond(lines: List<String>): Long? {
+    override fun solveSecond(lines: List<String>): Any {
         val registers = lines.registers()
         val program = lines.program()
         return findARegisterForCloneProgram(
             program = program,
             bRegisterInitial = registers.getValue('B'),
             cRegisterInitial = registers.getValue('C')
-        )
+        ) ?: "No value for A-Register found which produces a clone-program"
     }
 
     private fun List<String>.registers(): MutableMap<Char, Long> = this.takeWhile { it.isNotEmpty() }.associate { line ->
