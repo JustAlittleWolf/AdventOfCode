@@ -71,6 +71,9 @@ infix fun Vec2I.inside(field: Field<*>) = field.isInside(this)
 fun List<String>.toCharField(): Field<Char> = FieldImpl(this.map { it.toCharArray().filterNot(Char::isWhitespace) })
 fun List<String>.toMutableCharField(): MutableField<Char> = MutableFieldImpl(this.map { it.toCharArray().filterNot(Char::isWhitespace).toMutableList() })
 
+fun <T> fieldWithInitial(dimensions: Vec2I, initial: () -> T): Field<T> = FieldImpl(List(dimensions.y) { List(dimensions.x) { initial() } })
+fun <T> mutableFieldWithInitial(dimensions: Vec2I, initial: () -> T): MutableField<T> = MutableFieldImpl(MutableList(dimensions.y) { MutableList(dimensions.x) { initial() } })
+
 fun <T> List<List<T>>.toField(): Field<T> = FieldImpl(this)
 
 fun <T> List<List<T>>.toMutableField(): MutableField<T> {
