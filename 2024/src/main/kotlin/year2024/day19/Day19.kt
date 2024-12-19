@@ -3,12 +3,12 @@ package me.wolfii.year2024.day19
 import me.wolfii.automation.Solution
 
 class Day19 : Solution {
-    override fun solveFirst(lines: List<String>): Any? {
+    override fun solveFirst(lines: List<String>): Int {
         val towels = lines.towels()
         return lines.patterns().count { it.countPossible(towels) != 0L }
     }
 
-    override fun solveSecond(lines: List<String>): Any? {
+    override fun solveSecond(lines: List<String>): Long {
         val towels = lines.towels()
         return lines.patterns().sumOf { it.countPossible(towels) }
     }

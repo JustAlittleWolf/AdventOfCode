@@ -12,7 +12,7 @@ class Day18 : Solution {
         return shortestPathLength(Vec2I(0, 0), Vec2I(obstructions.width - 1, obstructions.height - 1), obstructions) ?: "No Path found"
     }
 
-    override fun solveSecond(lines: List<String>): Any {
+    override fun solveSecond(lines: List<String>): String {
         val bytes = lines.bytes()
         val obstructedIn = fieldWithInitial(Vec2I(bytes.maxOf { it.x } + 1, bytes.maxOf { it.y } + 1)) { pos ->
             val index = bytes.indexOf(pos)
