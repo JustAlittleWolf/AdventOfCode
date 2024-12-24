@@ -13,11 +13,11 @@ class Day1 : Solution {
     }
 
     override fun solveSecond(lines: List<String>): Int {
-        val keys = lines.map { it.firstId() }.toSet()
+        val frequency = HashMap<Int, Int>()
+        lines.forEach { frequency.compute(it.secondId()) { _, count -> (count ?: 0) + 1 } }
         return lines
-            .map { it.secondId() }
-            .filter { keys.contains(it) }
-            .sum()
+            .map { it.firstId() }
+            .sumOf { it * frequency.getOrDefault(it, 0) }
     }
 
     private fun String.firstId() = substringBefore(' ').toInt()
