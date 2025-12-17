@@ -10,9 +10,8 @@ fun main() {
     Solver.solve(
         SolveOptions(
             part = Part.BOTH,
-            input = Input.BOTH,
-            day = Day(1, 2025),
-            measureTime = true
+            input = Input.REAL,
+            day = Day(2, 2025)
         )
     )
 }
