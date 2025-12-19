@@ -34,7 +34,7 @@ class Day2 : Solution {
 
         private fun invalidIdsRecursive(number: IntArray, digit: Int): List<Long> =
             buildList {
-                if (digit + 1 >= number.size) return@buildList
+                if (digit >= number.size / 2) return@buildList
                 for (i in 0..9) {
                     if (digit == 0 && i == 0) continue
                     number[digit] = i
