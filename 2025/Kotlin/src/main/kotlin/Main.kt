@@ -10,8 +10,8 @@ fun main() {
     Solver.solve(
         SolveOptions(
             part = Part.BOTH,
-            input = Input.REAL,
-            day = Day(2, 2025)
+            input = Input.BOTH,
+            day = Day(3, 2025)
         )
     )
 }
